@@ -1,0 +1,118 @@
+# 控制主循环频率与离散时间
+controller_frequency_hz: 1000
+publish_rate_hz: 30
+controller_dt: 0.001
+enable_matlogger: false
+enable_nullspace_optimization: true
+enable_jdot_compensation: false
+arm_only_nullspace_test: false
+
+# 控制执行后端
+command_backend: "tcpip"
+interface_type: "HARDWARE"
+robot_interface_config_file: "$(find Moca_controller)/config/MOCA_franka_gripper.yaml"
+arm_transmission_type: "EFFORT"
+hrii_interface_adds_gravity_compensation: true
+# 末端 tool/load 的直接力矩补偿默认关闭，避免和 Franka/HRII 已有重力补偿重复。
+enable_franka_tool_load_control_compensation: false
+# 当前控制末端坐标系是否就是 Franka flange；no_gripper 时通常为 true。
+controller_ee_frame_is_franka_flange: true
+hold_until_first_target_pose: true
+command_output_enabled: true
+
+# TCP/IP 通信参数
+tcp_server_ip: "127.0.0.1"
+tcp_server_port: 5005
+tcp_retry_delay_ms: 2000
+
+# 模型与坐标系
+urdf_path: "$(find polytope_ros)/urdf/my_robot_fix_wheels.urdf"
+base_frame: "moca_base_footprint"
+ee_frame: "moca_franka_EE"
+world_frame: "odom"
+gravity_acceleration_mps2: 9.81
+target_pose_frame: "moca_target_pose"
+planned_base_frame: "moca_controller_planned_nullspace_base"
+planned_ee_frame: "moca_controller_planned_nullspace_ee"
+reset_to_home_topic: "/reset_to_home"
+# 是否打开在线零空间优化
+enable_online_nullspace_optimizer: false
+online_nullspace_optimizer_rate_hz: 100.0
+polytope_urdf_path: "$(find polytope_ros)/urdf/my_robot_fix_wheels.urdf"
+polytope_ee_frame: "moca_franka_EE"
+left_finger_joint_name: "moca_franka_franka_gripper_finger_joint1"
+right_finger_joint_name: "moca_franka_franka_gripper_finger_joint2"
+
+# 移动底盘导纳与速度限制
+mobile_base_inertia_diagonal: [100, 100, 30.725]
+mobile_base_admittance_damping_diagonal: [50.0, 50.0, 20.25]
+base_max_linear_velocity: 0.80
+base_max_angular_velocity: 0.4
+base_cmd_linear_velocity_deadband: 0.001
+base_cmd_angular_velocity_deadband: 0.05
+# 移动机器人零空间刚度等
+base_nullspace_linear_stiffness: 40.0
+base_nullspace_yaw_stiffness: 10.0
+
+# 关节限位与零空间可操作度参数
+joint_limit_margin_ratio: 0.10
+manipulability_gain: 30.0
+manipulability_gradient_step: 1.0e-4
+manipulability_epsilon: 1.0e-8
+manipulability_regularization: 1.0e-6
+manipulability_objective_max_norm: 20.0
+directional_force_axis_world: [0.0, 0.0, 1.0]
+
+# 加权广义逆相关权重
+w_r: 1.0
+# 机械臂权重
+w_f: 1.0
+w_r_yaw: 1.0
+J_weight: 0
+
+# 力矩滤波与限幅
+filter_params: 0.005
+delta_tau_max: 1.0
+impedance_filtering: false
+
+# 笛卡尔阻抗与零空间刚度
+initial_transl_cartesian_stiffness: 100.0
+initial_rot_cartesian_stiffness: 50.0
+# 这个nullspace stiffness仅作为机械臂的零空间刚度
+initial_nullspace_stiffness: 5.0
+joint_limit_torque_gain: 50.0
+
+# 夹爪与附加参数
+finger_command: 0.0
+task_acceleration_feedforward_gain: 0.0
+online_nullspace_gradient_weight: 5.0
+nullspace_base_arrow_scale: 1.0
+base_cmd_velocity_arrow_scale: 2.0
+
+# 控制器侧在线 polytope 零空间优化参数
+optimizer_max_iterations_per_waypoint: 60
+optimizer_pose_gain: 0.9
+optimizer_nullspace_step_size: 0.004
+optimizer_max_joint_update_norm: 0.08
+optimizer_pose_tolerance: 5.0e-4
+optimizer_capability_weight: 1.0
+optimizer_manipulability_weight: 1.0
+optimizer_joint_limit_weight: 1.0
+optimizer_smoothness_weight: 5.0e-2
+optimizer_nominal_weight: 5.0e-2
+optimizer_capability_alpha: 0.6
+optimizer_capability_near_weight: 5.0
+optimizer_capability_over_weight: 50.0
+optimizer_capability_over4_weight: 500.0
+optimizer_constrain_orientation: true
+optimizer_verbose: false
+# 旧版手动标量参数，现已不参与控制，仅保留作参考：
+# moca_desired_mass: 0.0
+# 任务空间期望加速度前馈惯量由控制器根据 whole-body 惯量自动计算：
+# 机械臂部分使用实时关节空间惯量，移动底盘部分使用导纳控制的虚拟惯量
+
+# 力/力矩能力统计的上下限
+min_linear_wrench: 2.0
+max_linear_wrench: 100.0
+min_angular_wrench: 0.1
+max_angular_wrench: 50.0

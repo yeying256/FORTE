@@ -1,0 +1,14 @@
+<launch>
+  <arg name="trajectory_config_file" default="$(find moca_trajectory_generator)/config/target_pose_generator_params.yaml" />
+  <arg name="fixed_frame" default="$(optenv ROBOT_ID moca_white)_odom" />
+  <arg name="server_name" default="moca_manual_target_pose_marker" />
+
+  <node pkg="moca_operator_gui"
+        type="manual_target_pose_marker.py"
+        name="moca_manual_target_pose_marker"
+        output="screen">
+    <rosparam command="load" file="$(arg trajectory_config_file)" subst_value="true" />
+    <param name="fixed_frame" value="$(arg fixed_frame)" />
+    <param name="server_name" value="$(arg server_name)" />
+  </node>
+</launch>

@@ -1,0 +1,6 @@
+string trajectory_mode
+bool comparison_force_sweep_enabled
+bool request_vlm_mass_estimate
+---
+bool success
+string message

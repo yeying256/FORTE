@@ -1,0 +1,15 @@
+{
+  "timestamp": "2026-05-20T14:52:31.819895+00:00",
+  "robot_state_topic": "/moca_sim/franka_state_bridge/robot_state",
+  "wrench_frame": "stiffness",
+  "gravity_acceleration_mps2": 9.81,
+  "sample_count": 12,
+  "valid_sample_count": 12,
+  "mass_kg": 1.1464269610259874,
+  "mass_std_kg": 0.12111775342468258,
+  "center_of_mass_m": [
+    -0.04909578510465599,
+    0.03222723959167817,
+    0.1801544523039911
+  ]
+}

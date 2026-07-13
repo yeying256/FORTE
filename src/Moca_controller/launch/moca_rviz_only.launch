@@ -1,0 +1,11 @@
+<launch>
+  <arg name="robot_id" default="$(optenv ROBOT_ID moca_white)" />
+  <arg name="rviz_config_file" default="$(find Moca_controller)/rviz/moca_tf_tree.rviz" />
+  <arg name="rendered_rviz_config_file" default="/tmp/moca_tf_tree_$(arg robot_id).rviz" />
+
+  <node pkg="Moca_controller"
+        type="moca_rviz_with_robot_id.py"
+        name="moca_tf_rviz"
+        args="--robot-id $(arg robot_id) --template $(arg rviz_config_file) --output $(arg rendered_rviz_config_file)"
+        output="screen" />
+</launch>

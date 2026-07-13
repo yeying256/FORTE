@@ -1,0 +1,10 @@
+force_capability_settings:
+  joint_names:
+    - moca_franka_joint1
+    - moca_franka_joint2
+    - moca_franka_joint3
+    - moca_franka_joint4
+    - moca_franka_joint5
+    - moca_franka_joint6
+    - moca_franka_joint7
+  arm_torque_limits: [60.0, 60.0, 60.0, 60.0, 12.0, 12.0, 12.0]

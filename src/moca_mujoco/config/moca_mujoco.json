@@ -1,0 +1,88 @@
+{
+  "mujoco": {
+    "urdf_path": "package://polytope_ros/urdf/my_robot_fix_wheels.urdf",
+    "generated_scene_path": "package://moca_mujoco/generated/moca_scene.xml",
+    "auto_generate_scene": true,
+    "headless": false,
+    "use_source_visual_meshes": true,
+    "realtime_rate": 1.0,
+    "target_frequency": 1000,
+    "freejoint_name": "moca_base_freejoint",
+    "root_body_name": "moca_base_footprint",
+    "ee_body_name": "moca_franka_link7",
+    "init_world_pose": [0.0, 0.0, -0.08, 0.0],
+    "init_joint_positions": [0.0, -0.785398, 0.0, -2.356194, 0.0, 1.570796, 0.785398, 0.04, 0.04],
+    "arm_joint_names": [
+      "moca_franka_joint1",
+      "moca_franka_joint2",
+      "moca_franka_joint3",
+      "moca_franka_joint4",
+      "moca_franka_joint5",
+      "moca_franka_joint6",
+      "moca_franka_joint7"
+    ],
+    "finger_joint_names": [
+      "moca_franka_franka_gripper_finger_joint1",
+      "moca_franka_franka_gripper_finger_joint2"
+    ],
+    "mobile_admittance_mass": [105.0, 105.0, 20.0],
+    "mobile_admittance_damping": [180.0, 180.0, 30.0],
+    "mobile_velocity_limits": [0.5, 0.5, 1.0],
+    "payload": {
+      "enabled": true,
+      "name": "lift_payload",
+      "position": [2.00, 0.0, 0.12],
+      "yaw": 0.0,
+      "box_half_extents": [0.12, 0.08, 0.12],
+      "box_mass": 7.0,
+      "box_rgba": [0.45, 0.30, 0.18, 1.0],
+      "handle_span": 0.12,
+      "handle_height": 0.10,
+      "handle_radius": 0.012,
+      "handle_mass": 0.6,
+      "handle_rgba": [0.15, 0.15, 0.15, 1.0],
+      "friction": [1.4, 0.08, 0.02],
+      "solref": [-8000.0, -200.0],
+      "solimp": [0.95, 0.995, 0.001]
+    },
+    "gripper_helper": {
+      "enabled": true,
+      "pad_half_extents": [0.006, 0.0025, 0.028],
+      "pad_center": [0.0, 0.0, 0.035],
+      "pad_inner_y": 0.0025,
+      "pad_rgba": [0.18, 0.18, 0.18, 1.0],
+      "pad_friction": [2.0, 0.08, 0.01],
+      "solref": [-4000.0, -120.0],
+      "solimp": [0.95, 0.995, 0.001]
+    },
+    "grasp_assist": {
+      "enabled": true,
+      "attach_distance": 0.03,
+      "attach_finger_position": 0.014,
+      "release_finger_position": 0.020
+    },
+    "fixed_camera": {
+      "enabled": true,
+      "preview_in_viewer": false,
+      "publish_to_ros": true,
+      "name": "payload_fixed_camera",
+      "frame_id": "payload_fixed_camera",
+      "ros_topic": "~fixed_camera/image_raw",
+      "camera_info_topic": "~fixed_camera/camera_info",
+      "publish_camera_info": true,
+      "publish_rate_hz": 10.0,
+      "width": 640,
+      "height": 480,
+      "fovy": 45.0,
+      "lookat_offset": [0.0, 0.0, 0.10],
+      "relative_position": [-1.1, -1.4, 0.9]
+    }
+  },
+  "communication": {
+    "tcp": {
+      "ip": "127.0.0.1",
+      "port": 5005,
+      "target_frequency": 1000
+    }
+  }
+}

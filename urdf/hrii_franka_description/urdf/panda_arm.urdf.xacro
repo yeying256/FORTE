@@ -1,0 +1,303 @@
+<?xml version='1.0' encoding='utf-8'?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="panda">
+
+
+    <!-- ***************** -->
+    <!-- Imported elements -->
+    <!-- ***************** -->
+
+    <xacro:include filename="$(find hrii_franka_description)/urdf/panda_arm.gazebo.xacro"/>
+    <xacro:include filename="$(find hrii_franka_description)/urdf/panda_arm.transmission.xacro"/>
+
+    <!-- ****** -->
+    <!-- Models -->
+    <!-- ****** -->
+
+    <xacro:macro name="panda_arm" params="  arm_id:='panda'">
+
+        <xacro:property name="joint_friction" value="2.0"/>
+        <xacro:property name="joint_damping" value="10.0"/>
+        
+        <link name="${arm_id}_base_link">
+            <inertial>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <mass value="3.06"/>
+                <inertia ixx="0.3" ixy="0.0" ixz="0.0" iyy="0.3" iyz="0.0" izz="0.3"/>
+            </inertial>
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://hrii_franka_description/meshes/visual/link0.dae"/>
+                </geometry>
+                <material name="">
+                    <color rgba="1 1 1 1"/>
+                </material>
+            </visual>
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://hrii_franka_description/meshes/collision/link0.stl"/>
+                </geometry>
+            </collision>
+        </link>
+
+        <link name="${arm_id}_link1">
+            <inertial>
+                <origin xyz="3.875e-03 2.081e-03 -0.1750" rpy="0 0 0"/>
+                <mass value="4.970684"/>
+                <inertia ixx="7.0337e-01" ixy="-1.3900e-04" ixz="6.7720e-03" iyy="7.0661e-01" iyz="1.9169e-02" izz="9.1170e-03"/>
+            </inertial>
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://hrii_franka_description/meshes/visual/link1.dae"/>
+                </geometry>
+                <material name="">
+                    <color rgba="1 1 1 1"/>
+                </material>
+            </visual>
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://hrii_franka_description/meshes/collision/link1.stl"/>
+                </geometry>
+            </collision>
+        </link>
+
+        <joint name="${arm_id}_joint1" type="revolute">
+            <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
+            <origin rpy="0 0 0" xyz="0 0 0.333"/>
+            <parent link="${arm_id}_base_link"/>
+            <child link="${arm_id}_link1"/>
+            <axis xyz="0 0 1"/>
+            <limit effort="87" lower="-2.8973" upper="2.8973" velocity="2.1750"/>
+            <dynamics damping="${joint_damping}" friction="${joint_friction}"/>
+            <!-- <dynamics D="1" K="7000" mu_coulomb="0" mu_viscous="16" damping="0.003" friction="0.0"/> -->
+        </joint>
+
+        <link name="${arm_id}_link2">
+            <inertial>
+                <origin xyz="-3.141e-03 -2.872e-02 3.495e-03" rpy="0 0 0"/>
+                <mass value="0.646926"/>
+                <inertia ixx="7.9620e-03" ixy="-3.9250e-03" ixz="1.0254e-02" iyy="2.8110e-02" iyz="7.0400e-04" izz="2.5995e-02"/>
+            </inertial>
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://hrii_franka_description/meshes/visual/link2.dae"/>
+                </geometry>
+                <material name="">
+                    <color rgba="1 1 1 1"/>
+                </material>
+            </visual>
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://hrii_franka_description/meshes/collision/link2.stl"/>
+                </geometry>
+            </collision>
+        </link>
+
+        <joint name="${arm_id}_joint2" type="revolute">
+            <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-1.7628" soft_upper_limit="1.7628"/>
+            <origin rpy="${-pi/2} 0 0" xyz="0 0 0"/>
+            <parent link="${arm_id}_link1"/>
+            <child link="${arm_id}_link2"/>
+            <axis xyz="0 0 1"/>
+            <limit effort="87" lower="-1.7628" upper="1.7628" velocity="2.1750"/>
+            <dynamics damping="${joint_damping}" friction="${joint_friction}"/>
+            <!-- <dynamics D="1" K="7000" mu_coulomb="0" mu_viscous="16" damping="0.003" friction="0.0"/> -->
+        </joint>
+
+        <link name="${arm_id}_link3">
+            <inertial>
+                <origin xyz="2.7518e-02 3.9252e-02 -6.6502e-02" rpy="0 0 0"/>
+                <mass value="3.228604"/>
+                <inertia ixx="3.7242e-02" ixy="-4.7610e-03" ixz="-1.1396e-02" iyy="3.6155e-02" iyz="-1.2805e-02" izz="1.0830e-02"/>
+            </inertial>
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://hrii_franka_description/meshes/visual/link3.dae"/>
+                </geometry>
+                <material name="">
+                    <color rgba="1 1 1 1"/>
+                </material>
+            </visual>
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://hrii_franka_description/meshes/collision/link3.stl"/>
+                </geometry>
+            </collision>
+        </link>
+
+        <joint name="${arm_id}_joint3" type="revolute">
+            <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
+            <origin rpy="${pi/2} 0 0" xyz="0 -0.316 0"/>
+            <parent link="${arm_id}_link2"/>
+            <child link="${arm_id}_link3"/>
+            <axis xyz="0 0 1"/>
+            <limit effort="87" lower="-2.8973" upper="2.8973" velocity="2.1750"/>
+            <dynamics damping="${joint_damping}" friction="${joint_friction}"/>
+            <!-- <dynamics D="1" K="7000" mu_coulomb="0" mu_viscous="16" damping="0.003" friction="0.0"/> -->
+        </joint>
+
+        <link name="${arm_id}_link4">
+            <inertial>
+                <origin xyz="-5.317e-02 1.04419e-01 2.7454e-02" rpy="0 0 0"/>
+                <mass value="3.587895"/>
+                <inertia ixx="2.5853e-02" ixy="7.7960e-03" ixz="-1.3320e-03" iyy="1.9552e-02" iyz="8.6410e-03" izz="2.8323e-02"/>
+            </inertial>
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://hrii_franka_description/meshes/visual/link4.dae"/>
+                </geometry>
+                <material name="">
+                    <color rgba="1 1 1 1"/>
+                </material>
+            </visual>
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://hrii_franka_description/meshes/collision/link4.stl"/>
+                </geometry>
+            </collision>
+        </link>
+
+        <joint name="${arm_id}_joint4" type="revolute">
+            <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-3.0718" soft_upper_limit="-0.0698"/>
+            <!-- soft_upper_limitr should be -0.0698, but that brakes simulation when initial position for this joint is 0.0 -->
+            <origin rpy="${pi/2} 0 0" xyz="0.0825 0 0"/>
+            <parent link="${arm_id}_link3"/>
+            <child link="${arm_id}_link4"/>
+            <axis xyz="0 0 1"/>
+            <limit effort="87" lower="-3.0718" upper="-0.0698" velocity="2.1750"/>
+            <!-- upper should be -0.0698, but that brakes simulation when initial position for this joint is 0.0 -->
+            <dynamics damping="${joint_damping}" friction="${joint_friction}"/>
+            <!-- <dynamics D="1" K="7000" mu_coulomb="0" mu_viscous="16" damping="0.003" friction="0.0"/> -->
+        </joint>
+
+        <link name="${arm_id}_link5">
+            <inertial>
+                <origin xyz="-1.1953e-02 4.1065e-02 -3.8437e-02" rpy="0 0 0"/>
+                <mass value="1.225946"/>
+                <inertia ixx="3.5549e-02" ixy="-2.1170e-03" ixz="-4.0370e-03" iyy="2.9474e-02" iyz="2.2900e-04" izz="8.6270e-03"/>
+            </inertial>
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://hrii_franka_description/meshes/visual/link5.dae"/>
+                </geometry>
+                <material name="">
+                    <color rgba="1 1 1 1"/>
+                </material>
+            </visual>
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://hrii_franka_description/meshes/collision/link5.stl"/>
+                </geometry>
+            </collision>
+        </link>
+
+        <joint name="${arm_id}_joint5" type="revolute">
+            <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
+            <origin rpy="${-pi/2} 0 0" xyz="-0.0825 0.384 0"/>
+            <parent link="${arm_id}_link4"/>
+            <child link="${arm_id}_link5"/>
+            <axis xyz="0 0 1"/>
+            <limit effort="12" lower="-2.8973" upper="2.8973" velocity="2.6100"/>
+            <dynamics damping="${joint_damping}" friction="${joint_friction}"/>
+            <!-- <dynamics D="1" K="7000" mu_coulomb="0" mu_viscous="16" damping="0.003" friction="0.0"/> -->
+        </joint>
+
+        <link name="${arm_id}_link6">
+             <inertial>
+                <origin xyz="6.0149e-02 -1.4117e-02 -1.0517e-02" rpy="0 0 0"/>
+                <mass value="1.666555"/>
+                <inertia ixx="1.9640e-03" ixy="1.0900e-04" ixz="-1.1580e-03" iyy="4.3540e-03" iyz="3.4100e-04" izz="5.4330e-03"/>
+            </inertial>
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://hrii_franka_description/meshes/visual/link6.dae"/>
+                </geometry>
+                <material name="">
+                    <color rgba="1 1 1 1"/>
+                </material>
+            </visual>
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://hrii_franka_description/meshes/collision/link6.stl"/>
+                </geometry>
+            </collision>
+        </link>
+
+        <joint name="${arm_id}_joint6" type="revolute">
+            <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-0.0175" soft_upper_limit="3.7525"/>
+            <origin rpy="${pi/2} 0 0" xyz="0 0 0"/>
+            <parent link="${arm_id}_link5"/>
+            <child link="${arm_id}_link6"/>
+            <axis xyz="0 0 1"/>
+            <limit effort="12" lower="-0.0175" upper="3.7525" velocity="2.6100"/>
+            <dynamics damping="${joint_damping}" friction="${joint_friction}"/>
+            <!-- <dynamics D="1" K="7000" mu_coulomb="0" mu_viscous="16" damping="0.003" friction="0.0"/> -->
+        </joint>
+
+        <link name="${arm_id}_link7">
+            <inertial>
+                <origin xyz="1.0517e-02 -4.252e-03 6.1597e-02" rpy="0 0 0"/>
+                <mass value="7.35522e-01"/>
+                <inertia ixx="1.2516e-02" ixy="-4.2800e-04" ixz="-1.1960e-03" iyy="1.0027e-02" iyz="-7.4100e-04" izz="4.8150e-03"/>
+            </inertial>
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://hrii_franka_description/meshes/visual/link7.dae"/>
+                </geometry>
+                <material name="">
+                    <color rgba="1 1 1 1"/>
+                </material>
+            </visual>
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://hrii_franka_description/meshes/collision/link7.stl"/>
+                </geometry>
+            </collision>
+        </link>
+
+        <joint name="${arm_id}_joint7" type="revolute">
+            <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.8973" soft_upper_limit="2.8973"/>
+            <origin rpy="${pi/2} 0 0" xyz="0.088 0 0"/>
+            <parent link="${arm_id}_link6"/>
+            <child link="${arm_id}_link7"/>
+            <axis xyz="0 0 1"/>
+            <limit effort="12" lower="-2.8973" upper="2.8973" velocity="2.6100"/>
+            <dynamics damping="${joint_damping}" friction="${joint_friction}"/>
+            <!-- <dynamics D="1" K="7000" mu_coulomb="0" mu_viscous="16" damping="0.003" friction="0.0"/> -->
+        </joint>
+
+        <link name="${arm_id}_flange"/>
+
+        <joint name="${arm_id}_flange_joint" type="fixed">
+            <origin rpy="0 0 0" xyz="0 0 0.107"/>
+            <parent link="${arm_id}_link7"/>
+            <child link="${arm_id}_flange"/>
+            <axis xyz="0 0 0"/>
+        </joint>
+
+        <!-- <joint name="${arm_id}_joint8" type="revolute">
+            <origin rpy="0 0 0" xyz="0 0 0.107"/>
+            <parent link="${arm_id}_link7"/>
+            <child link="${arm_id}_link8"/>
+            <limit lower="0" upper="0" effort="100" velocity="100"/>
+			<axis xyz="0 0 1" />
+        </joint> -->
+
+    </xacro:macro>
+    
+</robot>

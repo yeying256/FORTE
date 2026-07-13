@@ -1,0 +1,316 @@
+# 节点运行频率与接口开关
+publish_rate_hz: 100
+use_nullspace_joint_target: true
+log_optimization_info: false
+replan_during_execution: false
+seed_pose_topic: "/wb_cart_imp_controller/moca_pose"
+seed_joint_state_topic: "/wb_cart_imp_controller/moca_state"
+target_pose_topic: "/target_pose"
+manual_target_pose_topic: "/moca_manual_target_pose"
+publish_collision_sphere_markers: true
+publish_realtime_collision_sphere_markers: true
+collision_sphere_marker_topic: "/target_pose_generator/collision_spheres"
+task_force_mode: "mass_based_load"
+gravity_acceleration_mps2: 9.81
+# 这个歌参数会去发送topic请求
+enable_vlm_mass_request: true
+vlm_mass_request_topic: "/vlm_mass_request"
+vlm_mass_result_topic: "/vlm_mass_result"
+vlm_request_image_path: ""
+vlm_mass_request_timeout_sec: 90.0
+vlm_mass_request_force_refresh: false
+vlm_timeout_uses_default_payload_mass: false
+vlm_offline_mode: false
+default_payload_mass_kg: 0.0
+# 规划 force-capability 时，把 Franka Desk 中配置的末端 tool/load 重量叠加到所需力。
+enable_franka_tool_load_planning_compensation: true
+reset_to_home_topic: "/reset_to_home"
+reset_to_home_before_trajectory_start: true
+pre_trajectory_home_settle_duration_sec: 1.0
+world_frame: "odom"
+planned_base_frame: "moca_planned_nullspace_base"
+planned_ee_frame: "moca_planned_nullspace_ee"
+export_planner_metrics: true
+planner_metrics_csv_path: "$(find polytope_ros)/../../output/polytope_ros/planned_whole_body_metrics.csv"
+
+# 轨迹模式选择
+trajectory_mode: "payload_lift"
+manual_target_move_duration_sec: 4.0
+single_point_move_duration_sec: 5.0
+# 单点优化固定末端 pose，表达在 world_frame 下。orientation 使用 [x, y, z, w]。
+single_point_target_position: [0.55, 0.0, 1.10]
+single_point_target_orientation_xyzw: [0.0, 0.0, 0.0, 1.0]
+single_point_home_teaching_point_path: "$(find moca_trajectory_generator)/teaching_point/home.json"
+single_point_waypoints_path: "$(find moca_trajectory_generator)/teaching_point/point/way_points.json"
+single_point_home_return_duration_sec: 8.0
+single_point_teaching_waypoint_segment_duration_sec: 5.0
+home_teaching_point_path: "$(find moca_trajectory_generator)/teaching_point/home.json"
+teaching_waypoints_path: "$(find moca_trajectory_generator)/teaching_point/lift/way_points.json"
+home_return_duration_sec: 8.0
+teaching_waypoint_segment_duration_sec: 5.0
+move_home_teaching_point_path: "$(find moca_trajectory_generator)/teaching_point/home.json"
+move_teaching_waypoints_path: "$(find moca_trajectory_generator)/teaching_point/move/way_points.json"
+move_home_return_duration_sec: 8.0
+move_teaching_waypoint_segment_duration_sec: 5.0
+
+# 轨迹公共时间参数
+trajectory_start_delay_sec: 0.0
+trajectory_ramp_time_sec: 2.0
+optimization_horizon_sec: 10.0
+optimization_waypoint_count: 41
+
+# 圆轨迹参数
+circle_frequency_hz: 0.05
+circle_amplitude_x: 0.04
+circle_amplitude_y: 0.03
+circle_amplitude_z: 0.0
+circle_desired_force_magnitude: 70.0
+
+# 测试抬升轨迹参数
+test_forward_distance_x: 1.2
+test_lift_distance_z: -0.5
+test_forward_duration_sec: 8.0
+test_lift_duration_sec: 8.0
+
+# MuJoCo 重物抬升轨迹参数
+payload_box_center_x: 1.50
+payload_box_center_y: 0.0
+payload_box_center_z: 0.12
+payload_handle_top_z: 0.34
+payload_move_above_duration_sec: 5.0
+payload_descend_duration_sec: 3.0
+payload_close_duration_sec: 1.5
+payload_lift_duration_sec: 4.0
+payload_pregrasp_height: 0.15
+payload_grasp_ee_offset_z: -0.05
+payload_lift_distance_z: 0.4
+finger_open_command: 0.04
+finger_closed_command: 0.012
+
+lift_desired_force_magnitude: 10.0
+desired_force_radius_N: 10.0
+enable_force_capability_optimization: true
+
+# 双实验对比模式：先用第一组抬升力跑一次，再回到 home，再用第二组抬升力跑一次
+comparison_force_sweep_enabled: false
+comparison_first_lift_force_magnitude: 10.0
+comparison_second_lift_force_magnitude: 80.0
+comparison_return_home_duration_sec: 4.0
+comparison_home_settle_duration_sec: 1.0
+comparison_goal_settle_duration_sec: 4.0
+desired_force_ramp_time_sec: 1.0
+comparison_run_state_topic: "/comparison_run_state"
+
+# Polytope 优化器使用的模型与末端
+polytope_urdf_path: "$(find polytope_ros)/urdf/my_robot_fix_wheels.urdf"
+polytope_ee_frame: "moca_franka_EE"
+left_finger_joint_name: "moca_franka_franka_gripper_finger_joint1"
+right_finger_joint_name: "moca_franka_franka_gripper_finger_joint2"
+
+# 零空间优化器初始化参数 这些参数目前是作为默认参数来用。
+optimizer_max_iterations_per_waypoint: 30
+optimizer_max_trajectory_iterations: 300
+optimizer_pose_gain: 0.9
+optimizer_nullspace_step_size: 0.01
+optimizer_max_joint_update_norm: 0.08
+optimizer_pose_tolerance: 5.0e-4
+optimizer_capability_weight: 2.0
+optimizer_manipulability_weight: 1.0
+optimizer_joint_limit_weight: 8.0
+# 10维逐自由度相对权重: [base_x, base_y, base_yaw, joint1..joint7]
+# 前3维惩罚底盘远离初始位置，后7维惩罚机械臂关节远离中间值；0关闭，正数会按最大值归一化
+optimizer_joint_limit_dof_weights: [0.0, 2.0, 1.0, 10.0, 0.0, 1.0, 2.0, 1.0, 0.0, 0.0]
+optimizer_smoothness_weight: 8.0
+# 速度项直接惩罚相邻 waypoint 的 dq/dt 与底盘 [vx, vy, yaw_rate]，用于压低规划速度
+optimizer_velocity_weight: 10
+optimizer_base_velocity_weight: 0.5
+optimizer_nominal_weight: 5.0e-2
+optimizer_base_spectral_energy_weight: 8.0
+optimizer_base_spectral_cutoff_ratio: 0.1
+optimizer_base_spectral_power: 2.0
+optimizer_base_spectral_metric_x: 1.0
+optimizer_base_spectral_metric_y: 1.0
+optimizer_base_spectral_metric_yaw: 0.5
+# 篮子/本体球近似碰撞代价；默认关闭，设大于0后进入 whole-body 优化目标
+optimizer_collision_weight: 0.0
+optimizer_collision_safe_distance: 0.08
+# frame 可用 "ee" / "base" 别名；center 表达在该 frame 下，单位 m
+optimizer_collision_basket_spheres:
+  - {frame: "ee", center: [0.00, 0.00, 0.1], radius: 0.15}
+  - {frame: "ee", center: [0.00, 0.00, 0.3], radius: 0.18}
+  - {frame: "ee", center: [0.106, 0.106, 0.3], radius: 0.18}
+  - {frame: "ee", center: [-0.106, -0.106, 0.3], radius: 0.18}
+
+optimizer_collision_body_spheres:
+  - {frame: "base", center: [0.00, 0.00, 0.35], radius: 0.52}
+  - {frame: "base", center: [0.20, 0.00, 0.80], radius: 0.15}
+optimizer_capability_alpha: 0.9
+# true 时把 residual capability cost 的 exp 指数限制到 40，避免溢出；
+# false 时恢复原始无界 exp 行为，用来复现/定位 NaN。
+optimizer_capability_exponent_limit_enabled: true
+# 论文对比实验算法：
+# ours / manipulability_only / static_force_polytope / residual_force_polytope
+optimizer_comparison_algorithm: "ours"
+# gF cone-intersection-volume 近似参数；期望力非零时会优先使用期望力方向作为 cone axis。
+optimizer_comparison_cone_axis_world: [0.0, 0.0, 1.0]
+optimizer_comparison_cone_half_angle_rad: 0.1
+optimizer_comparison_cone_ring_count: 4
+optimizer_comparison_cone_azimuth_count: 12
+# true 时按 Ferrolho-style residual force polytope，用 waypoint 差分速度/加速度
+# 通过 RNEA 扣除轨迹本身需要的名义力矩；false 时退回 gravity-only 余量。
+optimizer_use_dynamic_residual_force_polytope: true
+# 动态剩余力多面体诊断：打开后会保存每个 waypoint 的 q/dq/ddq、RNEA 力矩、
+# residual torque limits、Jacobian、capacity/clearance/cost，用来定位 NaN 来源。
+# 检测开关和保存目录；文件名会自动添加时间戳和 waypoint index，保存格式是 YAML。
+optimizer_dynamic_residual_diagnostics_enabled: false
+optimizer_dynamic_residual_diagnostics_directory: "$(find polytope_ros)/../../output/polytope_ros/debug"
+optimizer_dynamic_residual_diagnostics_max_records: 20
+optimizer_capability_near_weight: 10.0
+optimizer_capability_over_weight: 60.0
+optimizer_capability_over4_weight: 400.0
+
+# 每种对比算法可以单独覆盖各项 cost 权重；未写字段会继承上面的 optimizer_* 默认值。
+# 注意：算法自身的 policy 仍会决定哪些 cost 真正参与目标函数。
+# 这里的参数的优先级最高，会覆盖上面 optimizer_* 的同名参数。
+optimizer_algorithm_weights:
+  ours:
+    capability_weight: 1.0
+    manipulability_weight: 1.0
+    joint_limit_weight: 8.0
+    joint_limit_dof_weights: [0.0, 2.0, 1.0, 10.0, 0.0, 1.0, 2.0, 1.0, 0.0, 0.0]
+    smoothness_weight: 8.0
+    velocity_weight: 10.0
+    nominal_weight: 5.0e-2
+    base_smoothness_weight: 8.0
+    base_velocity_weight: 0.5
+    base_nominal_weight: 0.0
+    base_spectral_energy_weight: 8.0
+    collision_weight: 1.0
+    capability_near_weight: 10.0
+    capability_over_weight: 60.0
+    capability_over4_weight: 400.0
+  manipulability_only:
+    capability_weight: 0.0
+    manipulability_weight: 1.0
+    joint_limit_weight: 8.0
+    joint_limit_dof_weights: [0.0, 2.0, 1.0, 10.0, 5.0, 1.0, 2.0, 1.0, 0.0, 0.0]
+    smoothness_weight: 8.0
+    velocity_weight: 15.0
+    nominal_weight: 5.0e-2
+    base_smoothness_weight: 8.0
+    base_velocity_weight: 15.0
+    base_nominal_weight: 0.0
+    base_spectral_energy_weight: 0.0
+    collision_weight: 1.0
+    capability_near_weight: 10.0
+    capability_over_weight: 60.0
+    capability_over4_weight: 400.0
+  static_force_polytope:
+    capability_weight: 2.0
+    manipulability_weight: 1.0
+    joint_limit_weight: 8.0
+    joint_limit_dof_weights: [0.0, 2.0, 1.0, 10.0, 0.0, 1.0, 2.0, 1.0, 0.0, 0.0]
+    smoothness_weight: 8.0
+    velocity_weight: 10.0
+    nominal_weight: 5.0e-2
+    base_smoothness_weight: 8.0
+    base_velocity_weight: 0.5
+    base_nominal_weight: 0.0
+    base_spectral_energy_weight: 8.0
+    collision_weight: 1.0
+    capability_near_weight: 10.0
+    capability_over_weight: 60.0
+    capability_over4_weight: 400.0
+  residual_force_polytope:
+    capability_weight: 60.0
+    manipulability_weight: 1.0
+    joint_limit_weight: 8.0
+    joint_limit_dof_weights: [0.0, 2.0, 1.0, 10.0, 0.0, 1.0, 2.0, 1.0, 0.0, 0.0]
+    smoothness_weight: 8.0
+    velocity_weight: 10.0
+    nominal_weight: 5.0e-2
+    base_smoothness_weight: 8.0
+    base_velocity_weight: 0.54
+    base_nominal_weight: 0.0
+    base_spectral_energy_weight: 8.0
+    collision_weight: 1.0
+    capability_near_weight: 10.0
+    capability_over_weight: 60.0
+    capability_over4_weight: 400.0
+  cone_intersection_volume:
+    capability_weight: 60.0
+    manipulability_weight: 0.0
+    joint_limit_weight: 2.0
+    joint_limit_dof_weights: [0.0, 2.0, 1.0, 10.0, 0.0, 1.0, 2.0, 1.0, 0.0, 0.0]
+    smoothness_weight: 8.0
+    velocity_weight: 7.0
+    nominal_weight: 5.0e-2
+    base_smoothness_weight: 8.0
+    base_velocity_weight: 0.5
+    base_nominal_weight: 0.0
+    base_spectral_energy_weight: 0.0
+    collision_weight: 0.1
+    capability_near_weight: 10.0
+    capability_over_weight: 60.0
+    capability_over4_weight: 400.0
+  joint_quintic_interpolation:
+    capability_weight: 0.0
+    manipulability_weight: 0.0
+    joint_limit_weight: 0.0
+    joint_limit_dof_weights: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    smoothness_weight: 0.0
+    velocity_weight: 0.0
+    nominal_weight: 0.0
+    base_smoothness_weight: 0.0
+    base_velocity_weight: 0.0
+    base_nominal_weight: 0.0
+    base_spectral_energy_weight: 0.0
+    collision_weight: 0.0
+    capability_near_weight: 0.0
+    capability_over_weight: 0.0
+    capability_over4_weight: 0.0
+optimizer_constrain_orientation: true
+optimizer_verbose: false
+
+# 单点优化实验专用参数；未在代码中单独设置的运行逻辑仍沿用上面的通用优化器结构。
+# 这里的权重会在 trajectory_mode=single_point_optimization 时替代 optimizer_*。
+single_point_optimizer_max_iterations_per_waypoint: 30
+single_point_optimizer_max_trajectory_iterations: 300
+single_point_optimizer_pose_gain: 0.9
+single_point_optimizer_nullspace_step_size: 0.01
+single_point_optimizer_max_joint_update_norm: 0.08
+single_point_optimizer_pose_tolerance: 5.0e-4
+single_point_optimizer_capability_weight: 2.0
+single_point_optimizer_manipulability_weight: 1.0
+single_point_optimizer_joint_limit_weight: 1.0
+single_point_optimizer_joint_limit_dof_weights: [0.0, 1.0, 1.0, 9.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0]
+single_point_optimizer_smoothness_weight: 0.0
+single_point_optimizer_velocity_weight: 0.0
+single_point_optimizer_base_velocity_weight: 0.0
+single_point_optimizer_nominal_weight: 0.0
+single_point_optimizer_base_spectral_energy_weight: 0.0
+single_point_optimizer_base_spectral_cutoff_ratio: 0.1
+single_point_optimizer_base_spectral_power: 0.0
+single_point_optimizer_base_spectral_metric_x: 0.0
+single_point_optimizer_base_spectral_metric_y: 0.0
+single_point_optimizer_base_spectral_metric_yaw: 0.0
+single_point_optimizer_collision_weight: 0.0
+single_point_optimizer_collision_safe_distance: 0.08
+single_point_optimizer_collision_basket_spheres:
+  - {frame: "ee", center: [0.00, 0.00, 0.1], radius: 0.15}
+  - {frame: "ee", center: [0.00, 0.00, 0.3], radius: 0.18}
+  - {frame: "ee", center: [0.106, 0.106, 0.3], radius: 0.18}
+  - {frame: "ee", center: [-0.106, -0.106, 0.3], radius: 0.18}
+single_point_optimizer_collision_body_spheres:
+  - {frame: "base", center: [0.00, 0.00, 0.35], radius: 0.52}
+  - {frame: "base", center: [0.20, 0.00, 0.80], radius: 0.15}
+single_point_optimizer_capability_alpha: 0.7
+# 是否做限制赋值
+single_point_optimizer_capability_exponent_limit_enabled: false
+# 单点没有轨迹速度/加速度定义，保持 gravity-only residual。
+single_point_optimizer_use_dynamic_residual_force_polytope: false
+single_point_optimizer_capability_near_weight: 10.0
+single_point_optimizer_capability_over_weight: 60.0
+single_point_optimizer_capability_over4_weight: 400.0
+single_point_optimizer_constrain_orientation: true
+single_point_optimizer_verbose: false

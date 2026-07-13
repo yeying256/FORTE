@@ -1,0 +1,29 @@
+state_topic: /wb_cart_imp_controller/moca_state
+odom_topic: /moca_white/robotnik_base_control/odom
+arm_joint_command_topic: /moca_white/joint_position_controller/command
+base_cmd_vel_topic: /moca_white/robotnik_base_control/cmd_vel
+home_sample_topic: /moca_home_return/home_sample
+status_topic: /moca_home_return/status
+
+control_rate_hz: 30.0
+arm_joint_count: 7
+arm_motion_duration_sec: 8.0
+base_timeout_sec: 30.0
+
+base_kp_xy: 0.6
+base_ki_xy: 0.0
+base_kd_xy: 0.05
+base_kp_yaw: 0.8
+base_ki_yaw: 0.0
+base_kd_yaw: 0.05
+base_integral_limit_xy: 0.5
+base_integral_limit_yaw: 0.5
+base_max_linear_velocity: 0.25
+base_max_angular_velocity: 0.35
+base_position_tolerance: 0.02
+base_yaw_tolerance: 0.03
+goal_hold_time_sec: 0.5
+cmd_vel_in_base_frame: true
+
+home_arm_joint_positions: []
+home_base_pose: []

@@ -1,0 +1,58 @@
+# 控制循环
+controller_frequency_hz: 1000
+controller_dt: 0.001
+publish_rate_hz: 30
+
+# 这个控制器跟踪 /target_pose 中的 nullspace joint target。
+# pose / twist / acceleration 字段不进入控制律；desired_force 可通过 J^T F 进入关节力矩前馈。
+hold_until_first_target_pose: true
+track_base_planar_target: true
+command_output_enabled: true
+# 控制器内部的底盘速度按 world_frame 积分/显示；Robotnik/Gazebo cmd_vel 接口按 base frame 接收。
+base_cmd_vel_in_base_frame: true
+
+# 机械臂关节阻抗。若 arm_joint_damping 不给满7维，会按 joint_damping_ratio 自动生成。
+joint_damping_ratio: 1.0
+arm_joint_stiffness: [100.0, 200.0, 200.0, 100.0, 30.0, 30.0, 30.0]
+arm_joint_damping: []
+
+# 底盘平面广义坐标 [x, y, yaw] 的阻抗和导纳。
+# M = diag(105.0, 105.0, 34.65)
+# D = diag(1050.0, 1050.0, 346.5)
+base_planar_stiffness: [1500.0, 1500.0, 300.0]
+base_planar_damping: []
+mobile_base_inertia_diagonal: [105.0, 105.0, 34.65]
+mobile_base_admittance_damping_diagonal: [1050.0, 1050.0, 346.5]
+base_max_linear_velocity: 0.6
+base_max_angular_velocity: 0.35
+base_cmd_linear_velocity_deadband: 0.001
+base_cmd_angular_velocity_deadband: 0.05
+nullspace_base_arrow_scale: 0.02
+base_cmd_velocity_arrow_scale: 0.5
+
+# 力矩安全限制统一来自 /force_capability_settings/arm_torque_limits。
+delta_tau_max: 1.0
+enable_desired_force_torque_feedforward: true
+desired_force_torque_scale: 1.0
+desired_force_torque_limit: 30.0
+
+# HRII接口会在effort命令上补重力时保持true，和原Moca_controller一致。
+hrii_interface_adds_gravity_compensation: true
+
+reset_to_home_topic: "/reset_to_home"
+force_capability_settings_topic: "/force_capability_settings"
+
+# 仅用于绘图/数据记录，不进入关节阻抗控制律。
+manipulability_epsilon: 1.0e-8
+manipulability_regularization: 1.0e-6
+directional_force_axis_world: [0.0, 0.0, 1.0]
+
+# RViz/TF接口要和原笛卡尔阻抗控制器保持一致。
+urdf_path: "package://polytope_ros/urdf/my_robot_fix_wheels.urdf"
+base_frame: "moca_base_footprint"
+ee_frame: "moca_franka_flange"
+debug_current_base_frame: "moca_controller_current_base"
+debug_current_ee_frame: "moca_controller_current_ee"
+target_pose_frame: "moca_target_pose"
+planned_base_frame: "moca_controller_planned_nullspace_base"
+planned_ee_frame: "moca_controller_planned_nullspace_ee"

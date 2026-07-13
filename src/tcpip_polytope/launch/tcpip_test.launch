@@ -1,0 +1,21 @@
+<launch>
+
+    <!-- 
+      节点定义 
+      pkg: 功能包名称 (tcpip_polytope)
+      type: 可执行文件名称 (tcpip_test)
+      name: 节点在 ROS 图中的名称 (默认与 type 相同，这里显式指定以便修改)
+      output: 日志输出位置 (screen 表示输出到终端，方便调试)
+
+    -->
+
+    <node pkg="tcpip_polytope" type="tcpip_test" name="tcpip_test_node" output="screen">
+        <!-- 可选：如果需要传递参数给节点，可以在这里添加 -->
+        <!-- 例如：指定配置文件路径 -->
+        <!-- <param name="config_file" value="$(find tcpip_polytope)/config/config.yaml" /> -->
+        <!-- 例如：指定服务器 IP 和端口 (如果代码支持 rosparam 加载) -->
+        <!-- <param name="server_ip" value="192.168.1.100" /> -->
+        <!-- <param name="server_port" value="50055" /> -->
+    </node>
+
+</launch>

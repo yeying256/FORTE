@@ -1,0 +1,77 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+.Python
+env/
+venv/
+.venv/
+ENV/
+pip-wheel-metadata/
+.pip/
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+*.ipynb
+
+# PyTorch / ML artifacts
+*.pth
+*.pt
+*.ckpt
+*.pkl
+*.h5
+*.hdf5
+runs/
+logs/
+wandb/
+mlruns/
+outputs/
+private/
+
+# Data & datasets (large files)
+*.csv
+*.json
+*.parquet
+*.npy
+*.npz
+
+# RAG / Vector DB
+chroma_db/
+*.index
+*.faiss
+
+# Environment & secrets
+.env
+.env.*
+*.key
+*.secret
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Distribution / packaging
+*.tar.gz
+*.zip
+*.whl
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.log

@@ -1,0 +1,9 @@
+<launch>
+  <arg name="config_file" default="$(find moca_mujoco)/config/moca_mujoco.json" />
+
+  <node pkg="moca_mujoco"
+        type="moca_mujoco_main.py"
+        name="moca_mujoco"
+        output="screen"
+        args="--config $(arg config_file)" />
+</launch>

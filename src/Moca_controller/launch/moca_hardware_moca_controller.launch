@@ -1,0 +1,117 @@
+  <launch>
+  <arg name="interface_type" default="$(optenv INTERFACE_TYPE SIMULATION)" />
+  <arg name="launch_rviz" default="true" />
+  <arg name="robot_id" default="$(optenv ROBOT_ID moca_red)" />
+  <arg name="robot_model" default="moca" />
+  <arg name="arm_model" default="franka" />
+  <arg name="arm_id" default="franka" />
+  <arg name="robot_brand" default="$(arg robot_model)" />
+  <arg name="arm_transmission_type" default="effort" />
+  <arg name="command_output_enabled" default="true" />
+  <!-- <arg name="launch_gripper" default="franka_gripper" /> -->
+  <arg name="launch_gripper" default="no_gripper" />
+  <arg name="launch_interactive_marker" default="false" />
+  <arg name="is_floating_base_robot" default="true" />
+  <arg name="robot_interface_config_file" default="$(eval find('hrii_moca_interface') + '/config/moca_no_gripper.yaml' if arg('launch_gripper') == 'no_gripper' else find('Moca_controller') + '/config/MOCA_franka_gripper.yaml')" />
+  <arg name="controller_ee_frame" default="$(eval 'moca_franka_flange' if arg('launch_gripper') == 'no_gripper' else 'moca_franka_EE')" />
+  <arg name="planner_ee_frame" default="$(eval 'moca_franka_flange' if arg('launch_gripper') == 'no_gripper' else 'moca_franka_EE')" />
+  <arg name="controller_ee_frame_is_franka_flange" default="$(eval 'true' if arg('launch_gripper') == 'no_gripper' else 'false')" />
+  <arg name="robot_ip" default="$(optenv ROBOT_ARM_IP 172.16.0.101)" />
+  <arg name="robot_arm_ip" default="$(arg robot_ip)" />
+  <arg name="launch_joint_state_pub_gui" default="true" />
+
+  <arg name="launch_target_pose_generator" default="true" />
+  <arg name="launch_vlm_mass_estimator" default="false" />
+  <arg name="launch_planner_metrics_plotter" default="true" />
+  <arg name="trajectory_config_file" default="$(find moca_trajectory_generator)/config/target_pose_generator_params.yaml" />
+  <arg name="force_capability_settings_file" default="$(find moca_trajectory_generator)/config/force_capability_settings.yaml" />
+  <arg name="vlm_config_file" default="$(find moca_vlm)/config/mass_estimator_params.yaml" />
+  <arg name="plotter_config_file" default="$(find polytope_ros)/config/real_execution_plotter.yaml" />
+  <arg name="planner_metrics_plotter_config_file" default="$(find polytope_ros)/config/planner_metrics_plotter.yaml" />
+  <arg name="rviz_config_file" default="$(find Moca_controller)/rviz/moca_tf_tree.rviz" />
+  <arg name="franka_tool_state_topic" default="/$(arg robot_id)/franka_state_bridge/franka_tool_state" />
+
+  <rosparam command="load" file="$(arg force_capability_settings_file)" subst_value="true" />
+
+  <include file="$(find hrii_general_robot_controllers)/launch/generic_robot_launcher.xml" pass_all_args="true" />
+
+  <group ns="$(arg robot_id)">
+    <node pkg="Moca_controller"
+          type="Moca_controller_node"
+          name="wb_cart_imp_controller"
+          output="screen"
+          required="true">
+      <rosparam command="load" file="$(find Moca_controller)/config/controller_params.yaml" subst_value="true" />
+      <param name="command_backend" value="hrii" />
+      <param name="interface_type" value="$(arg interface_type)" />
+      <param name="robot_interface_config_file" value="$(arg robot_interface_config_file)" />
+      <param name="arm_transmission_type" value="$(arg arm_transmission_type)" />
+      <param name="command_output_enabled" value="$(arg command_output_enabled)" />
+      <param name="world_frame" value="$(arg robot_id)_odom" />
+      <param name="ee_frame" value="$(arg controller_ee_frame)" />
+      <param name="polytope_ee_frame" value="$(arg planner_ee_frame)" />
+      <param name="franka_tool_state_topic" value="$(arg franka_tool_state_topic)" />
+      <param name="controller_ee_frame_is_franka_flange" value="$(arg controller_ee_frame_is_franka_flange)" />
+      <remap from="~vir_torque" to="/wb_cart_imp_controller/vir_torque" />
+      <remap from="~manipulability" to="/wb_cart_imp_controller/manipulability" />
+      <remap from="~manipulability_ellipsoid" to="/wb_cart_imp_controller/manipulability_ellipsoid" />
+      <remap from="~manipulability_gradient_norm" to="/wb_cart_imp_controller/manipulability_gradient_norm" />
+      <remap from="~directional_force_capacity" to="/wb_cart_imp_controller/directional_force_capacity" />
+      <remap from="~force_polytope_vertices" to="/wb_cart_imp_controller/force_polytope_vertices" />
+      <remap from="~desired_force" to="/wb_cart_imp_controller/desired_force" />
+      <remap from="~nullspace_task_acceleration_norm" to="/wb_cart_imp_controller/nullspace_task_acceleration_norm" />
+      <remap from="~nullspace_base_arrow" to="/wb_cart_imp_controller/nullspace_base_arrow" />
+      <remap from="~base_cmd_velocity_arrow" to="/wb_cart_imp_controller/base_cmd_velocity_arrow" />
+      <remap from="~moca_state" to="/wb_cart_imp_controller/moca_state" />
+      <remap from="~arm_task_torque" to="/wb_cart_imp_controller/arm_task_torque" />
+      <remap from="~arm_nullspace_torque" to="/wb_cart_imp_controller/arm_nullspace_torque" />
+      <remap from="~moca_pose" to="/wb_cart_imp_controller/moca_pose" />
+      <remap from="~moca_pose_target" to="/wb_cart_imp_controller/moca_pose_target" />
+      <remap from="~nullspace_task_acceleration" to="/wb_cart_imp_controller/nullspace_task_acceleration" />
+      <remap from="~moca_velocity" to="/wb_cart_imp_controller/moca_velocity" />
+      <remap from="~base_cmd_velocity" to="/wb_cart_imp_controller/base_cmd_velocity" />
+      <remap from="~moca_state_target" to="/wb_cart_imp_controller/moca_state_target" />
+    </node>
+  </group>
+
+  <node if="$(arg launch_target_pose_generator)"
+        pkg="moca_trajectory_generator"
+        type="target_pose_generator_node"
+        name="target_pose_generator"
+        output="screen">
+    <rosparam command="load" file="$(arg trajectory_config_file)" subst_value="true" />
+    <param name="enable_vlm_mass_request" value="$(arg launch_vlm_mass_estimator)" />
+    <param name="world_frame" value="$(arg robot_id)_odom" />
+    <param name="polytope_ee_frame" value="$(arg planner_ee_frame)" />
+    <param name="franka_tool_state_topic" value="$(arg franka_tool_state_topic)" />
+  </node>
+
+  <node if="$(arg launch_vlm_mass_estimator)"
+        pkg="moca_vlm"
+        type="mass_estimator_node.py"
+        name="moca_vlm_mass_estimator"
+        output="screen">
+    <rosparam command="load" file="$(arg vlm_config_file)" subst_value="true" />
+  </node>
+
+  <node pkg="polytope_ros"
+        type="real_execution_plotter.py"
+        name="real_execution_plotter"
+        output="screen">
+    <rosparam command="load" file="$(arg trajectory_config_file)" subst_value="true" />
+    <param name="world_frame" value="$(arg robot_id)_odom" />
+    <rosparam command="load" file="$(arg plotter_config_file)" subst_value="true" />
+  </node>
+
+  <node if="$(arg launch_planner_metrics_plotter)"
+        pkg="polytope_ros"
+        type="planner_metrics_plotter.py"
+        name="planner_metrics_plotter"
+        output="screen">
+    <rosparam command="load" file="$(arg trajectory_config_file)" subst_value="true" />
+    <param name="enable_vlm_mass_request" value="$(arg launch_vlm_mass_estimator)" />
+    <param name="world_frame" value="$(arg robot_id)_odom" />
+    <rosparam command="load" file="$(arg planner_metrics_plotter_config_file)" subst_value="true" />
+  </node>
+
+</launch>

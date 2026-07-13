@@ -1,0 +1,13 @@
+optimizer_capability_weight: 5.0
+optimizer_manipulability_weight: 2.0
+optimizer_joint_limit_weight: 3.0
+optimizer_smoothness_weight: 10.0
+optimizer_nominal_weight: 5.0e-2
+optimizer_base_smoothness_weight: 10.0
+optimizer_base_nominal_weight: 5.0e-2
+optimizer_base_spectral_energy_weight: 1.0
+optimizer_base_spectral_cutoff_ratio: 0.35
+optimizer_base_spectral_power: 2.0
+optimizer_base_spectral_metric_x: 1.0
+optimizer_base_spectral_metric_y: 1.0
+optimizer_base_spectral_metric_yaw: 0.5

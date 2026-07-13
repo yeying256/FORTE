@@ -1,0 +1,148 @@
+<launch>
+  <!-- Gazebo-facing entrypoint built around the migrated HRII MOCA stack. -->
+  <arg name="interface_type" default="SIMULATION" />
+  <arg name="robot_model" default="moca" />
+  <arg name="arm_model" default="franka" />
+  <arg name="arm_id" default="franka" />
+  <arg name="robot_id" default="moca_red" />
+  <arg name="robot_brand" default="moca" />
+  <arg name="arm_transmission_type" default="effort" />
+  <arg name="launch_gripper" default="no_gripper" />
+  <arg name="robot_interface_config_file" default="$(find hrii_moca_interface)/config/moca_no_gripper.yaml" />
+  <!--
+    On this machine Gazebo provides libgazebo_ros_planar_move.so but the
+    force-based base plugin is not installed. Use the available omni plugin
+    for simulation so the MOCA base can actually move.
+  -->
+  <arg name="base_launch_robotnik_base_control" default="false" />
+  <arg name="base_launch_ros_force_based_move" default="false" />
+  <arg name="base_launch_ros_planar_move_plugin" default="true" />
+
+  <arg name="launch_rviz" default="true" />
+  <arg name="launch_gazebo_gui" default="true" />
+  <arg name="launch_gazebo_paused" default="true" />
+  <arg name="launch_gazebo_world" default="true" />
+  <arg name="gazebo_world" default="$(find hrii_gazebo_utils)/worlds/attacher_world.world" />
+  <arg name="launch_interactive_marker" default="true" />
+  <arg name="launch_target_pose_generator" default="true" />
+  <arg name="launch_target_command_bridge" default="true" />
+  <arg name="launch_vlm_mass_estimator" default="true" />
+  <arg name="launch_planner_metrics_plotter" default="true" />
+  <arg name="trajectory_config_file" default="$(find moca_trajectory_generator)/config/target_pose_generator_params.yaml" />
+  <arg name="force_capability_settings_file" default="$(find moca_trajectory_generator)/config/force_capability_settings.yaml" />
+  <arg name="vlm_config_file" default="$(find moca_vlm)/config/mass_estimator_params.yaml" />
+  <arg name="planner_metrics_plotter_config_file" default="$(find polytope_ros)/config/planner_metrics_plotter.yaml" />
+
+  <arg name="controller_type" default="cartesian_impedance_controller" />
+  <arg name="controller_args" default="--impedance-filtering 0 --cartesian-stiffness-trans 500 --cartesian-stiffness-rot 30 --nullspace-stiffness 10" />
+  <arg name="is_floating_base_robot" default="true" />
+  <arg name="robot_arm_ip" default="$(optenv ROBOT_ARM_IP 192.168.0.101)" />
+  <arg name="inertia_settings" default="medium" />
+  <arg name="inertial_yaw_scaling" default="0.33" />
+  <arg name="damping_scale_factor" default="10.0" />
+  <arg name="base_nullspace_linear_stiffness" default="400.0" />
+  <arg name="base_nullspace_yaw_stiffness" default="100.0" />
+  <arg name="arm_nullspace_joint_stiffness" default="10.0" />
+  <arg name="active_weighted_jacobian_mode" default="base" />
+  <arg name="idle_weighted_jacobian_mode" default="equal" />
+  <arg name="enable_base_planar_wrench_tracking" default="false" />
+  <arg name="base_planar_kp_xy" default="250.0" />
+  <arg name="base_planar_kd_xy" default="80.0" />
+  <arg name="base_planar_kp_yaw" default="120.0" />
+  <arg name="base_planar_kd_yaw" default="20.0" />
+  <arg name="base_planar_max_force_xy" default="300.0" />
+  <arg name="base_planar_max_torque_yaw" default="80.0" />
+
+  <rosparam command="load" file="$(arg force_capability_settings_file)" subst_value="true" />
+
+  <include file="$(find hrii_general_robot_controllers)/launch/generic_robot_launcher.xml" pass_all_args="true" />
+
+  <group ns="$(arg robot_id)">
+    <node pkg="hrii_floating_base_robot_controllers"
+          type="$(arg controller_type)"
+          name="$(arg controller_type)"
+          output="screen"
+          args="--config-file-path $(arg robot_interface_config_file) $(arg controller_args)" />
+
+    <node if="$(arg launch_interactive_marker)"
+          pkg="hrii_utils"
+          type="interactive_marker.py"
+          name="interactive_marker"
+          output="screen"
+          args="-a">
+      <param name="origin_link_name" value="$(arg robot_id)_odom" />
+      <param name="marker_link_name" value="$(arg robot_id)_$(arg arm_model)_EE" />
+      <param name="transf_publisher_name" value="$(arg controller_type)/equilibrium_pose" />
+    </node>
+
+    <node pkg="hrii_robotnik_control"
+          type="admittance_controller_node"
+          name="admittance_controller_node"
+          output="screen"
+          required="true">
+      <param name="inertia_settings" value="$(arg inertia_settings)" />
+      <param name="inertial_yaw_scaling" value="$(arg inertial_yaw_scaling)" />
+      <param name="damping_scale_factor" value="$(arg damping_scale_factor)" />
+      <remap from="admittance_controller_node/cmd_vel" to="/$(arg robot_id)/robotnik_base_control/cmd_vel" />
+      <remap from="admittance_controller_node/mass_matrix" to="robotnik_base_control/mass_matrix" />
+      <remap from="admittance_controller_node/vir_torque" to="cartesian_impedance_controller/vir_torque" />
+    </node>
+  </group>
+
+  <node if="$(arg launch_target_command_bridge)"
+        pkg="moca_trajectory_generator"
+        type="hrii_target_command_bridge.py"
+        name="hrii_target_command_bridge"
+        output="screen">
+    <param name="old_pose_topic" value="/$(arg robot_id)/cartesian_impedance_controller/moca_pose" />
+    <param name="old_state_topic" value="/$(arg robot_id)/cartesian_impedance_controller/moca_state" />
+    <param name="equilibrium_pose_topic" value="/$(arg robot_id)/cartesian_impedance_controller/equilibrium_pose" />
+    <param name="mobile_base_des_joint_pos_topic" value="/$(arg robot_id)/cartesian_impedance_controller/mobile_base_des_joint_pos" />
+    <param name="arm_des_joint_pos_topic" value="/$(arg robot_id)/cartesian_impedance_controller/arm_des_joint_pos" />
+    <param name="moca_des_joint_pos_topic" value="/$(arg robot_id)/cartesian_impedance_controller/moca_des_joint_pos" />
+    <param name="nullspace_stiffness_matrix_topic" value="/$(arg robot_id)/cartesian_impedance_controller/nullspace_stiffness_matrix" />
+    <param name="weighted_jacobian_topic" value="/$(arg robot_id)/cartesian_impedance_controller/weighted_jacobian" />
+    <param name="external_base_wrench_topic" value="/$(arg robot_id)/ext_torque" />
+    <param name="base_nullspace_linear_stiffness" value="$(arg base_nullspace_linear_stiffness)" />
+    <param name="base_nullspace_yaw_stiffness" value="$(arg base_nullspace_yaw_stiffness)" />
+    <param name="arm_nullspace_joint_stiffness" value="$(arg arm_nullspace_joint_stiffness)" />
+    <param name="active_weighted_jacobian_mode" value="$(arg active_weighted_jacobian_mode)" />
+    <param name="idle_weighted_jacobian_mode" value="$(arg idle_weighted_jacobian_mode)" />
+    <param name="enable_base_planar_wrench_tracking" value="$(arg enable_base_planar_wrench_tracking)" />
+    <param name="base_planar_kp_xy" value="$(arg base_planar_kp_xy)" />
+    <param name="base_planar_kd_xy" value="$(arg base_planar_kd_xy)" />
+    <param name="base_planar_kp_yaw" value="$(arg base_planar_kp_yaw)" />
+    <param name="base_planar_kd_yaw" value="$(arg base_planar_kd_yaw)" />
+    <param name="base_planar_max_force_xy" value="$(arg base_planar_max_force_xy)" />
+    <param name="base_planar_max_torque_yaw" value="$(arg base_planar_max_torque_yaw)" />
+  </node>
+
+  <node if="$(arg launch_vlm_mass_estimator)"
+        pkg="moca_vlm"
+        type="mass_estimator_node.py"
+        name="moca_vlm_mass_estimator"
+        output="screen">
+    <rosparam command="load" file="$(arg vlm_config_file)" subst_value="true" />
+  </node>
+
+  <node if="$(arg launch_target_pose_generator)"
+        pkg="moca_trajectory_generator"
+        type="target_pose_generator_node"
+        name="target_pose_generator"
+        output="screen">
+    <rosparam command="load" file="$(arg trajectory_config_file)" subst_value="true" />
+    <param name="enable_vlm_mass_request" value="$(arg launch_vlm_mass_estimator)" />
+    <param name="world_frame" value="$(arg robot_id)_odom" />
+  </node>
+
+  <node if="$(arg launch_planner_metrics_plotter)"
+        pkg="polytope_ros"
+        type="planner_metrics_plotter.py"
+        name="planner_metrics_plotter"
+        output="screen">
+    <rosparam command="load" file="$(arg trajectory_config_file)" subst_value="true" />
+    <param name="enable_vlm_mass_request" value="$(arg launch_vlm_mass_estimator)" />
+    <param name="world_frame" value="$(arg robot_id)_odom" />
+    <rosparam command="load" file="$(arg planner_metrics_plotter_config_file)" subst_value="true" />
+  </node>
+</launch>

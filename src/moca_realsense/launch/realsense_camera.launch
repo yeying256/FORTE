@@ -1,0 +1,63 @@
+<launch>
+  <arg name="serial_no" default="" />
+  <arg name="fps" default="30" />
+  <arg name="color_width" default="640" />
+  <arg name="color_height" default="480" />
+  <arg name="color_format" default="YUYV" />
+  <arg name="depth_width" default="640" />
+  <arg name="depth_height" default="480" />
+  <arg name="enable_color" default="true" />
+  <arg name="enable_depth" default="false" />
+  <arg name="align_depth_to_color" default="false" />
+  <arg name="publish_color_topic" default="true" />
+  <arg name="publish_depth_topic" default="false" />
+  <arg name="publish_pointcloud" default="false" />
+  <arg name="pointcloud_stride" default="8" />
+  <arg name="publish_every_n_frames" default="1" />
+  <arg name="wait_timeout_ms" default="3000" />
+  <arg name="show_color_window" default="false" />
+  <arg name="color_window_name" default="MOCA RealSense" />
+  <arg name="color_window_scale" default="1.0" />
+  <arg name="capture_jpeg_quality" default="90" />
+  <arg name="launch_rviz" default="true" />
+  <arg name="run_topic_test" default="false" />
+
+  <node pkg="moca_realsense"
+        type="moca_realsense_node"
+        name="moca_realsense"
+        output="screen">
+    <param name="serial_no" value="$(arg serial_no)" />
+    <param name="fps" value="$(arg fps)" />
+    <param name="color_width" value="$(arg color_width)" />
+    <param name="color_height" value="$(arg color_height)" />
+    <param name="color_format" value="$(arg color_format)" />
+    <param name="depth_width" value="$(arg depth_width)" />
+    <param name="depth_height" value="$(arg depth_height)" />
+    <param name="enable_color" value="$(arg enable_color)" />
+    <param name="enable_depth" value="$(arg enable_depth)" />
+    <param name="align_depth_to_color" value="$(arg align_depth_to_color)" />
+    <param name="publish_color_topic" value="$(arg publish_color_topic)" />
+    <param name="publish_depth_topic" value="$(arg publish_depth_topic)" />
+    <param name="publish_pointcloud" value="$(arg publish_pointcloud)" />
+    <param name="pointcloud_stride" value="$(arg pointcloud_stride)" />
+    <param name="publish_every_n_frames" value="$(arg publish_every_n_frames)" />
+    <param name="wait_timeout_ms" value="$(arg wait_timeout_ms)" />
+    <param name="show_color_window" value="$(arg show_color_window)" />
+    <param name="color_window_name" value="$(arg color_window_name)" />
+    <param name="color_window_scale" value="$(arg color_window_scale)" />
+    <param name="capture_jpeg_quality" value="$(arg capture_jpeg_quality)" />
+  </node>
+
+  <node if="$(arg launch_rviz)"
+        pkg="rviz"
+        type="rviz"
+        name="moca_realsense_rviz"
+        args="-d $(find moca_realsense)/rviz/realsense_test.rviz"
+        output="screen" />
+
+  <node if="$(arg run_topic_test)"
+        pkg="moca_realsense"
+        type="realsense_topic_test.py"
+        name="moca_realsense_topic_test"
+        output="screen" />
+</launch>

@@ -1,0 +1,67 @@
+<launch>
+  <arg name="trajectory_config_file" default="$(find moca_trajectory_generator)/config/target_pose_generator_params.yaml" />
+  <arg name="force_capability_settings_file" default="$(find moca_trajectory_generator)/config/force_capability_settings.yaml" />
+  <arg name="vlm_config_file" default="$(find moca_vlm)/config/mass_estimator_params.yaml" />
+  <arg name="plotter_config_file" default="$(find polytope_ros)/config/force_sweep_comparison_plotter.yaml" />
+  <arg name="planner_metrics_plotter_config_file" default="$(find polytope_ros)/config/planner_metrics_plotter.yaml" />
+  <arg name="launch_vlm_mass_estimator" default="false" />
+  <arg name="launch_planner_metrics_plotter" default="true" />
+  <arg name="launch_rviz" default="true" />
+  <arg name="rviz_config_file" default="$(find Moca_controller)/rviz/moca_tf_tree.rviz" />
+
+  <rosparam command="load" file="$(arg force_capability_settings_file)" subst_value="true" />
+
+  <node pkg="Moca_controller"
+        type="Moca_controller_node"
+        name="wb_cart_imp_controller"
+        output="screen">
+    <rosparam command="load" file="$(find Moca_controller)/config/controller_params.yaml" subst_value="true" />
+  </node>
+
+  <node pkg="moca_trajectory_generator"
+        type="target_pose_generator_node"
+        name="target_pose_generator"
+        output="screen">
+    <rosparam command="load" file="$(arg trajectory_config_file)" subst_value="true" />
+    <param name="task_force_mode" value="legacy_fixed" />
+    <param name="enable_vlm_mass_request" value="false" />
+    <param name="comparison_force_sweep_enabled" value="true" />
+    <param name="comparison_first_lift_force_magnitude" value="10.0" />
+    <param name="comparison_second_lift_force_magnitude" value="100.0" />
+  </node>
+
+  <node if="$(arg launch_vlm_mass_estimator)"
+        pkg="moca_vlm"
+        type="mass_estimator_node.py"
+        name="moca_vlm_mass_estimator"
+        output="screen">
+    <rosparam command="load" file="$(arg vlm_config_file)" subst_value="true" />
+  </node>
+
+  <node pkg="polytope_ros"
+        type="force_sweep_comparison_plotter.py"
+        name="force_sweep_comparison_plotter"
+        output="screen">
+    <rosparam command="load" file="$(arg trajectory_config_file)" subst_value="true" />
+    <rosparam command="load" file="$(arg plotter_config_file)" subst_value="true" />
+    <param name="task_force_mode" value="legacy_fixed" />
+  </node>
+
+  <node if="$(arg launch_planner_metrics_plotter)"
+        pkg="polytope_ros"
+        type="planner_metrics_plotter.py"
+        name="planner_metrics_plotter"
+        output="screen">
+    <rosparam command="load" file="$(arg trajectory_config_file)" subst_value="true" />
+    <rosparam command="load" file="$(arg planner_metrics_plotter_config_file)" subst_value="true" />
+    <param name="comparison_force_sweep_enabled" value="true" />
+    <param name="planner_metrics_expected_run_count" value="2" />
+  </node>
+
+  <node if="$(arg launch_rviz)"
+        pkg="rviz"
+        type="rviz"
+        name="moca_tf_rviz"
+        args="-d $(arg rviz_config_file)"
+        output="screen" />
+</launch>

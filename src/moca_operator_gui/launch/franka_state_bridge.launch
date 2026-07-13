@@ -1,0 +1,29 @@
+<launch>
+  <arg name="robot_id" default="$(optenv ROBOT_ID moca_white)" />
+  <arg name="robot_arm_ip" default="$(optenv ROBOT_ARM_IP 192.168.0.101)" />
+  <arg name="publish_rate_hz" default="100.0" />
+  <arg name="realtime_ignore" default="true" />
+  <arg name="invert_external_wrench" default="false" />
+
+  <group ns="$(arg robot_id)">
+    <node pkg="moca_operator_gui"
+          type="franka_state_bridge_node"
+          name="franka_state_bridge"
+          output="screen">
+      <param name="robot_arm_ip" value="$(arg robot_arm_ip)" />
+      <param name="publish_rate_hz" value="$(arg publish_rate_hz)" />
+      <param name="realtime_ignore" value="$(arg realtime_ignore)" />
+      <param name="invert_external_wrench" value="$(arg invert_external_wrench)" />
+      <param name="frame_id" value="$(arg robot_id)_franka_base" />
+      <rosparam param="joint_names" subst_value="true">
+        - $(arg robot_id)_franka_joint1
+        - $(arg robot_id)_franka_joint2
+        - $(arg robot_id)_franka_joint3
+        - $(arg robot_id)_franka_joint4
+        - $(arg robot_id)_franka_joint5
+        - $(arg robot_id)_franka_joint6
+        - $(arg robot_id)_franka_joint7
+      </rosparam>
+    </node>
+  </group>
+</launch>

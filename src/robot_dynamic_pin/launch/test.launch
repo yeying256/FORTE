@@ -1,0 +1,16 @@
+<launch>
+
+    <!-- 
+      节点定义 
+      pkg: 功能包名称 (tcpip_polytope)
+      type: 可执行文件名称 (tcpip_test)
+      name: 节点在 ROS 图中的名称 (默认与 type 相同，这里显式指定以便修改)
+      output: 日志输出位置 (screen 表示输出到终端，方便调试)
+
+    -->
+
+    <node pkg="robot_dynamic_pin" type="test_pin_moca" name="test_pin_moca" output="screen">
+        <param name="urdf_path" value="$(find polytope_ros)/urdf/my_robot_fix_wheels.urdf" />
+    </node>
+
+</launch>

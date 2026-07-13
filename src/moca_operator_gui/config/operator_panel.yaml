@@ -1,0 +1,200 @@
+window_title: "MOCA 上位机"
+default_controller_mode: "joint"
+planner_start_service: "/target_pose_generator/start_planning"
+planner_service_timeout_sec: 20.0
+reset_to_home_topic: "/reset_to_home"
+home_teaching_point_path: "$(find moca_trajectory_generator)/teaching_point/home.json"
+teaching_waypoints_path: "$(find moca_trajectory_generator)/teaching_point/lift/way_points.json"
+home_return_duration_sec: 8.0
+teaching_waypoint_segment_duration_sec: 5.0
+single_point_home_teaching_point_path: "$(find moca_trajectory_generator)/teaching_point/home.json"
+single_point_waypoints_path: "$(find moca_trajectory_generator)/teaching_point/point/way_points.json"
+single_point_home_return_duration_sec: 8.0
+single_point_teaching_waypoint_segment_duration_sec: 5.0
+single_point_move_duration_sec: 5.0
+simulation_force_shutdown_process_names:
+  - "gzserver"
+  - "gzclient"
+force_shutdown_process_names:
+  - "gzserver"
+  - "gzclient"
+  - "Moca_controller_node"
+  - "moca_joint_impedance_controller_node"
+  - "moca_joint_impe"
+  - "franka_state_bridge_node"
+  - "moca_realsense_node"
+  - "moca_teaching_state_monitor"
+  - "moca_home_return"
+  - "tcpip_test"
+simulation_reset_relaunch_delay_sec: 1.5
+
+simulation_launch:
+  package: "Moca_controller"
+  file: "moca_gazebo_moca_controller.launch"
+  args:
+    - "robot_id:=$(optenv SIM_ROBOT_ID moca_sim)"
+    - "launch_gazebo_gui:=true"
+    - "launch_gazebo_paused:=true"
+    - "launch_target_pose_generator:=false"
+    - "launch_vlm_mass_estimator:=false"
+    - "command_output_enabled:=true"
+
+joint_simulation_launch:
+  package: "moca_joint_impedance_controller"
+  file: "moca_joint_impedance_controller.launch"
+  args:
+    - "interface_type:=SIMULATION"
+    - "robot_model:=moca"
+    - "arm_model:=franka"
+    - "arm_id:=franka"
+    - "robot_id:=$(optenv SIM_ROBOT_ID moca_sim)"
+    - "robot_brand:=moca"
+    - "arm_transmission_type:=effort"
+    - "command_output_enabled:=true"
+    - "launch_gripper:=no_gripper"
+    - "is_floating_base_robot:=true"
+    - "robot_interface_config_file:=$(find hrii_moca_interface)/config/moca_no_gripper.yaml"
+    - "base_launch_robotnik_base_control:=false"
+    - "base_launch_ros_force_based_move:=false"
+    - "base_launch_ros_planar_move_plugin:=true"
+    - "launch_robot:=true"
+    - "launch_rviz:=false"
+    - "launch_gazebo_gui:=true"
+    - "launch_gazebo_paused:=true"
+    - "launch_gazebo_world:=true"
+    - "launch_target_pose_generator:=false"
+    - "launch_vlm_mass_estimator:=false"
+    - "launch_planner_metrics_plotter:=false"
+
+hardware_launch:
+  package: "Moca_controller"
+  file: "moca_hardware_moca_controller.launch"
+  args:
+    - "interface_type:=HARDWARE"
+    - "robot_model:=moca"
+    - "arm_model:=franka"
+    - "arm_id:=franka"
+    - "robot_id:=$(optenv ROBOT_ID moca_white)"
+    - "launch_gripper:=no_gripper"
+    - "launch_rviz:=false"
+    - "launch_target_pose_generator:=false"
+    - "launch_vlm_mass_estimator:=false"
+    - "command_output_enabled:=true"
+
+joint_hardware_launch:
+  package: "moca_joint_impedance_controller"
+  file: "moca_joint_impedance_controller.launch"
+  args:
+    - "interface_type:=HARDWARE"
+    - "robot_model:=moca"
+    - "arm_model:=franka"
+    - "arm_id:=franka"
+    - "robot_id:=$(optenv ROBOT_ID moca_white)"
+    - "robot_brand:=moca"
+    - "arm_transmission_type:=effort"
+    - "command_output_enabled:=true"
+    - "launch_gripper:=no_gripper"
+    - "is_floating_base_robot:=true"
+    - "robot_interface_config_file:=$(find hrii_moca_interface)/config/moca_no_gripper.yaml"
+    - "robot_arm_ip:=$(optenv ROBOT_ARM_IP 192.168.0.101)"
+    - "base_launch_robotnik_base_control:=false"
+    - "base_launch_ros_force_based_move:=false"
+    - "base_launch_ros_planar_move_plugin:=true"
+    - "launch_robot:=true"
+    - "launch_rviz:=false"
+    - "launch_target_pose_generator:=false"
+    - "launch_vlm_mass_estimator:=false"
+    - "launch_planner_metrics_plotter:=false"
+
+rviz_launch:
+  package: "Moca_controller"
+  file: "moca_rviz_only.launch"
+  args:
+    - "robot_id:=$(optenv ROBOT_ID moca_white)"
+
+vlm_launch:
+  package: "moca_vlm"
+  file: "mass_estimator.launch"
+  args: []
+
+realsense_launch:
+  package: "moca_realsense"
+  file: "realsense_camera.launch"
+  args:
+    - "launch_rviz:=false"
+    - "color_width:=640"
+    - "color_height:=480"
+    - "fps:=30"
+    - "color_format:=YUYV"
+    - "enable_depth:=false"
+    - "align_depth_to_color:=false"
+    - "publish_color_topic:=true"
+    - "publish_depth_topic:=false"
+    - "publish_pointcloud:=false"
+    - "publish_every_n_frames:=1"
+    - "show_color_window:=true"
+    - "color_window_scale:=0.75"
+    - "run_topic_test:=false"
+
+pose_marker_launch:
+  package: "moca_operator_gui"
+  file: "manual_target_pose_marker.launch"
+  args: []
+
+planner_launch:
+  package: "moca_trajectory_generator"
+  file: "target_pose_generator.launch"
+  args:
+    - "autostart_planning:=false"
+    - "enable_vlm_mass_request:=true"
+    - "launch_gripper:=no_gripper"
+
+teaching_launch:
+  package: "moca_teaching_tools"
+  file: "teaching_state_monitor.launch"
+  args:
+    - "robot_id:=$(optenv ROBOT_ID moca_white)"
+
+home_return_launch:
+  package: "moca_home_return"
+  file: "home_return_controller.launch"
+  args:
+    - "robot_id:=$(optenv ROBOT_ID moca_white)"
+
+plot_data_recorder_launch:
+  package: "polytope_ros"
+  file: "experiment_data_recorder.launch"
+  args: []
+
+franka_state_bridge_launch:
+  package: "moca_operator_gui"
+  file: "franka_state_bridge.launch"
+  args:
+    - "robot_id:=$(optenv ROBOT_ID moca_white)"
+    - "robot_arm_ip:=$(optenv ROBOT_ARM_IP 192.168.0.101)"
+    - "publish_rate_hz:=100.0"
+
+teaching_current_sample_topic: "/moca_teaching/current_sample"
+teaching_directional_force_capacity_topic: "/moca_teaching/upward_force_capacity"
+teaching_manipulability_topic: "/moca_teaching/manipulability"
+teaching_record_service: "/moca_teaching_state_monitor/record"
+teaching_robot_state_topic: "/moca_white/franka_state_bridge/robot_state"
+teaching_odom_topic: "/moca_white/robotnik_base_control/odom"
+teaching_points_output_path: "output/polytope_ros/teaching_points/teaching_points.json"
+home_sample_topic: "/moca_home_return/home_sample"
+home_return_status_topic: "/moca_home_return/status"
+home_return_start_service: "/moca_home_return/start"
+home_return_stop_service: "/moca_home_return/stop"
+home_return_set_current_service: "/moca_home_return/set_home_from_current"
+plot_data_recorder_start_service: "/moca_plot_data_recorder/start"
+plot_data_recorder_wait_start_service: "/moca_plot_data_recorder/wait_start"
+plot_data_recorder_stop_service: "/moca_plot_data_recorder/stop"
+plot_data_recorder_record_point_service: "/moca_plot_data_recorder/record_point"
+plot_data_recorder_undo_point_service: "/moca_plot_data_recorder/undo_point"
+plot_data_recorder_finish_points_service: "/moca_plot_data_recorder/finish_points"
+plot_data_recorder_outputs_topic: "/moca_plot_data_recorder/latest_outputs"
+payload_robot_state_topic: "/moca_white/wb_cart_imp_controller/robot_state"
+payload_wrench_frame: "stiffness"
+payload_wrench_data_mode: "raw"
+payload_gravity_acceleration_mps2: 9.81
+payload_identification_output_dir: "output/polytope_ros/payload_identification"

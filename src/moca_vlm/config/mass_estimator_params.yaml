@@ -1,0 +1,40 @@
+request_topic: /vlm_mass_request
+result_topic: /vlm_mass_result
+
+# If true, call the selected VLM backend and save a fresh JSON result.
+# If false, skip the API and read the saved result JSON directly.
+use_api: true
+
+# Supported examples:
+#   gpt-4o
+#   gpt-4o-mini
+#   gemini-1.5-flash
+#   ollama/llama3.2-vision:11b
+model: gpt-4o
+
+# Optional provider overrides. Leave empty to rely on environment variables
+# and the default OpenAI endpoint.
+api_key: ""
+gemini_api_key: ""
+local_base_url: ""
+
+# Test-mode inputs/outputs.
+image_source: realsense
+default_image_path: ""
+realsense_image_topic: /color/image_raw
+realsense_capture_service: /moca_realsense/capture_image
+realsense_snapshot_path: /tmp/moca_vlm_realsense_latest.png
+result_json_path: "$(find moca_vlm)/config/offline_mass_estimate.json"
+auto_save_api_result: true
+# When use_api=true and an incoming request has force_refresh=false,
+# return this saved result immediately instead of spending a new VLM call.
+reuse_last_result: true
+
+# Run API-backed inference inside a dedicated Python environment so ROS'
+# system Python can load vendored dependencies without conda.
+api_python_executable: python3
+api_helper_script_path: "$(find moca_vlm)/scripts/mass_estimator_api_helper.py"
+vendor_python_path: "$(find moca_vlm)/vendor/python"
+
+# Optional override if the manipulicity submodule lives somewhere else.
+manipulicity_repo_path: ""

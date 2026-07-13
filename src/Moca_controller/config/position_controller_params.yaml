@@ -1,0 +1,51 @@
+# 控制主循环频率与离散时间
+controller_frequency_hz: 1000
+publish_rate_hz: 30
+controller_dt: 0.001
+
+# TCP/IP 通信参数
+tcp_server_ip: "127.0.0.1"
+tcp_server_port: 5005
+tcp_retry_delay_ms: 2000
+
+# 模型与坐标系
+urdf_path: "$(find polytope_ros)/urdf/my_robot_fix_wheels.urdf"
+base_frame: "moca_base_footprint"
+ee_frame: "moca_franka_EE"
+world_frame: "odom"
+target_pose_frame: "moca_target_pose"
+planned_base_frame: "moca_controller_planned_nullspace_base"
+planned_ee_frame: "moca_controller_planned_nullspace_ee"
+reset_to_home_topic: "/reset_to_home"
+
+# 位置控制器基础参数
+pid_anti_windup_coeff: 0.1
+enable_arm_gravity_compensation: false
+enable_arm_coriolis_compensation: false
+finger_command: 0.0
+
+# 底盘位置 PID，直接输出世界坐标系速度
+base_max_linear_velocity: 1.0
+base_max_angular_velocity: 1.0
+base_position_pid_kp: [10.0, 10.0, 5.0]
+base_position_pid_ki: [0.001, 0.001, 0.001]
+base_position_pid_kd: [1.0, 1.0, 1.0]
+
+# 机械臂双环 PID
+# 外环：位置误差 -> 期望关节速度
+arm_position_pid_kp: [60.0, 60.0, 60.0, 60.0, 40.0, 40.0, 3.0]
+arm_position_pid_ki: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+arm_position_pid_kd: [0.28, 0.28, 0.28, 0.28, 0.2, 0.16, 0.12]
+arm_position_pid_output_limits: [10.0, 10.0, 10.0, 10.0, 10.0, 8.0, 8.0]
+
+# 内环：速度误差 -> 力矩
+# output_limits <= 0 表示自动使用模型 effort limit
+arm_velocity_pid_kp: [100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0]
+arm_velocity_pid_ki: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+arm_velocity_pid_kd: [1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5]
+arm_velocity_pid_output_limits: [-1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0]
+
+# 可视化与统计
+directional_force_axis_world: [0.0, 0.0, 1.0]
+nullspace_base_arrow_scale: 0.25
+base_cmd_velocity_arrow_scale: 2.0

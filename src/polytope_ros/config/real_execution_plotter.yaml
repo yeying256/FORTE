@@ -1,0 +1,27 @@
+# 实际状态与目标状态话题
+pose_topic: "/wb_cart_imp_controller/moca_pose"
+pose_target_topic: "/wb_cart_imp_controller/moca_pose_target"
+state_topic: "/wb_cart_imp_controller/moca_state"
+state_target_topic: "/wb_cart_imp_controller/moca_state_target"
+arm_task_torque_topic: "/wb_cart_imp_controller/arm_task_torque"
+arm_nullspace_torque_topic: "/wb_cart_imp_controller/arm_nullspace_torque"
+nullspace_task_acceleration_topic: "/wb_cart_imp_controller/nullspace_task_acceleration"
+nullspace_task_acceleration_norm_topic: "/wb_cart_imp_controller/nullspace_task_acceleration_norm"
+manipulability_topic: "/wb_cart_imp_controller/manipulability"
+directional_force_capacity_topic: "/wb_cart_imp_controller/directional_force_capacity"
+desired_force_topic: "/wb_cart_imp_controller/desired_force"
+base_cmd_velocity_topic: "/wb_cart_imp_controller/base_cmd_velocity"
+
+# 图像显示与刷新参数
+show_window: true
+render_rate_hz: 5.0
+history_duration_sec: 60.0
+save_first_cycle_metrics: true
+auto_save_and_freeze: true
+freeze_after_duration_sec: 45.0
+freeze_extra_duration_sec: 5.0
+
+# 图像保存路径
+output_png_path: "$(find polytope_ros)/../../output/polytope_ros/real_execution_plot2.png"
+first_cycle_manipulability_png_path: "$(find polytope_ros)/../../output/polytope_ros/first_cycle_manipulability2.png"
+first_cycle_remaining_force_png_path: "$(find polytope_ros)/../../output/polytope_ros/first_cycle_remaining_force2.png"

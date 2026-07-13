@@ -1,0 +1,46 @@
+<launch>
+  <arg name="robot_id" default="$(optenv ROBOT_ID moca_white)" />
+  <arg name="config_file" default="$(find moca_teaching_tools)/config/teaching_state_monitor_params.yaml" />
+  <arg name="state_topic" default="/wb_cart_imp_controller/moca_state" />
+  <arg name="robot_state_topic" default="/$(arg robot_id)/franka_state_bridge/robot_state" />
+  <arg name="ee_pose_topic" default="/wb_cart_imp_controller/moca_pose" />
+  <arg name="odom_topic" default="/$(arg robot_id)/robotnik_base_control/odom" />
+  <arg name="allow_state_odom_fallback" default="true" />
+  <arg name="force_capability_settings_file" default="$(find moca_trajectory_generator)/config/force_capability_settings.yaml" />
+  <arg name="upward_force_capacity_topic" default="/moca_teaching/upward_force_capacity" />
+  <arg name="manipulability_topic" default="/moca_teaching/manipulability" />
+  <arg name="polytope_urdf_path" default="$(find polytope_ros)/urdf/my_robot_fix_wheels.urdf" />
+  <arg name="polytope_ee_frame" default="moca_franka_EE" />
+
+  <rosparam command="load" file="$(arg force_capability_settings_file)" subst_value="true" />
+
+  <node pkg="moca_teaching_tools"
+        type="teaching_state_monitor.py"
+        name="moca_teaching_state_monitor"
+        output="screen">
+    <rosparam command="load" file="$(arg config_file)" subst_value="true" />
+    <param name="state_topic" value="$(arg state_topic)" />
+    <param name="ee_pose_topic" value="$(arg ee_pose_topic)" />
+    <param name="odom_topic" value="$(arg odom_topic)" />
+    <param name="allow_state_odom_fallback" value="$(arg allow_state_odom_fallback)" />
+    <param name="upward_force_capacity_topic" value="$(arg upward_force_capacity_topic)" />
+    <param name="manipulability_topic" value="$(arg manipulability_topic)" />
+  </node>
+
+  <node pkg="moca_teaching_tools"
+        type="moca_teaching_upward_force_capacity_node"
+        name="moca_teaching_upward_force_capacity"
+        output="screen">
+    <param name="state_topic" value="$(arg state_topic)" />
+    <param name="robot_state_topic" value="$(arg robot_state_topic)" />
+    <rosparam param="robot_state_topics" subst_value="true">
+      - $(arg robot_state_topic)
+      - /moca_sim/franka_state_bridge/robot_state
+    </rosparam>
+    <param name="capacity_topic" value="$(arg upward_force_capacity_topic)" />
+    <param name="manipulability_topic" value="$(arg manipulability_topic)" />
+    <param name="urdf_path" value="$(arg polytope_urdf_path)" />
+    <param name="ee_frame" value="$(arg polytope_ee_frame)" />
+    <rosparam param="directional_force_axis_world">[0.0, 0.0, 1.0]</rosparam>
+  </node>
+</launch>

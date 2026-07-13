@@ -1,0 +1,10 @@
+<launch>
+  <arg name="config_file" default="$(find moca_vlm)/config/mass_estimator_params.yaml" />
+
+  <node pkg="moca_vlm"
+        type="mass_estimator_node.py"
+        name="moca_vlm_mass_estimator"
+        output="screen">
+    <rosparam command="load" file="$(arg config_file)" subst_value="true" />
+  </node>
+</launch>

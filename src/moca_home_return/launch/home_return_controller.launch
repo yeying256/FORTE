@@ -1,0 +1,19 @@
+<launch>
+  <arg name="robot_id" default="$(optenv ROBOT_ID moca_white)" />
+  <arg name="config_file" default="$(find moca_home_return)/config/home_return_params.yaml" />
+  <arg name="state_topic" default="/wb_cart_imp_controller/moca_state" />
+  <arg name="odom_topic" default="/$(arg robot_id)/robotnik_base_control/odom" />
+  <arg name="arm_joint_command_topic" default="/$(arg robot_id)/joint_position_controller/command" />
+  <arg name="base_cmd_vel_topic" default="/$(arg robot_id)/robotnik_base_control/cmd_vel" />
+
+  <node pkg="moca_home_return"
+        type="home_return_controller.py"
+        name="moca_home_return"
+        output="screen">
+    <rosparam command="load" file="$(arg config_file)" subst_value="true" />
+    <param name="state_topic" value="$(arg state_topic)" />
+    <param name="odom_topic" value="$(arg odom_topic)" />
+    <param name="arm_joint_command_topic" value="$(arg arm_joint_command_topic)" />
+    <param name="base_cmd_vel_topic" value="$(arg base_cmd_vel_topic)" />
+  </node>
+</launch>

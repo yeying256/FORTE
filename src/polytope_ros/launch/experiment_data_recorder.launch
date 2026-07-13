@@ -1,0 +1,20 @@
+<launch>
+  <arg name="config_file" default="$(find polytope_ros)/config/experiment_data_recorder.yaml"/>
+  <arg name="controller_namespace" default="/wb_cart_imp_controller"/>
+
+  <node pkg="polytope_ros"
+        type="experiment_data_recorder.py"
+        name="moca_plot_data_recorder"
+        output="screen">
+    <rosparam command="load" file="$(arg config_file)"/>
+    <param name="manipulability_topic" value="$(arg controller_namespace)/manipulability"/>
+    <param name="manipulability_ellipsoid_topic" value="$(arg controller_namespace)/manipulability_ellipsoid"/>
+    <param name="directional_force_capacity_topic" value="$(arg controller_namespace)/directional_force_capacity"/>
+    <param name="desired_force_topic" value="$(arg controller_namespace)/desired_force"/>
+    <param name="force_polytope_vertices_topic" value="$(arg controller_namespace)/force_polytope_vertices"/>
+    <param name="pose_topic" value="$(arg controller_namespace)/moca_pose"/>
+    <param name="pose_target_topic" value="$(arg controller_namespace)/moca_pose_target"/>
+    <param name="state_topic" value="$(arg controller_namespace)/moca_state"/>
+    <param name="state_target_topic" value="$(arg controller_namespace)/moca_state_target"/>
+  </node>
+</launch>

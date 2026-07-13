@@ -1,0 +1,31 @@
+<launch>
+    <arg name="urdf_path" default="$(find polytope_ros)/../../urdf/my_robot_fix_wheels.urdf" />
+    <arg name="base_frame" default="moca_base_footprint" />
+    <arg name="ee_frame" default="moca_franka_EE" />
+    <arg name="output_csv_path" default="$(find polytope_ros)/../../output/polytope_ros/whole_body_demo.csv" />
+    <arg name="horizon_sec" default="10.0" />
+    <arg name="trajectory_frequency_hz" default="0.05" />
+    <arg name="desired_force_magnitude" default="70.0" />
+    <arg name="amplitude_x" default="0.04" />
+    <arg name="amplitude_y" default="0.03" />
+    <arg name="amplitude_z" default="0.0" />
+    <arg name="waypoint_count" default="41" />
+    <arg name="constrain_orientation" default="true" />
+
+    <node pkg="polytope_ros" type="whole_body_demo_node" name="whole_body_demo_node" output="screen">
+        <rosparam command="load" file="$(find polytope_ros)/config/whole_body_demo.yaml" subst_value="true" />
+        <param name="urdf_path" value="$(arg urdf_path)" />
+        <param name="base_frame" value="$(arg base_frame)" />
+        <param name="ee_frame" value="$(arg ee_frame)" />
+        <param name="output_csv_path" value="$(arg output_csv_path)" />
+        <param name="horizon_sec" value="$(arg horizon_sec)" />
+        <param name="trajectory_frequency_hz" value="$(arg trajectory_frequency_hz)" />
+        <param name="desired_force_magnitude" value="$(arg desired_force_magnitude)" />
+        <param name="amplitude_x" value="$(arg amplitude_x)" />
+        <param name="amplitude_y" value="$(arg amplitude_y)" />
+        <param name="amplitude_z" value="$(arg amplitude_z)" />
+        <param name="waypoint_count" value="$(arg waypoint_count)" />
+        <param name="constrain_orientation" value="$(arg constrain_orientation)" />
+        <rosparam param="initial_arm_joint_positions">[0.0, -0.4, 0.0, -1.8, 0.0, 1.4, 0.7]</rosparam>
+    </node>
+</launch>

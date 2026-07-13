@@ -1,0 +1,23 @@
+<launch>
+    <arg name="urdf_path" default="$(find polytope_ros)/../../urdf/my_robot_fix_wheels.urdf" />
+    <arg name="ee_frame" default="moca_franka_EE" />
+    <arg name="vertices_csv_path" default="$(find polytope_ros)/../../output/polytope_ros/polytope_vertices.csv" />
+    <arg name="output_png_path" default="$(find polytope_ros)/../../output/polytope_ros/polytope_plot.png" />
+    <arg name="show_window" default="true" />
+
+    <node pkg="polytope_ros" type="polytope_node" name="polytope_node" output="screen">
+        <param name="urdf_path" value="$(arg urdf_path)" />
+        <param name="ee_frame" value="$(arg ee_frame)" />
+        <param name="vertices_csv_path" value="$(arg vertices_csv_path)" />
+        <param name="gravity_adjusted" value="true" />
+        <rosparam param="joint_positions">[0.0, -0.4, 0.0, -1.8, 0.0, 1.4, 0.7, 0.02, 0.02]</rosparam>
+    </node>
+
+    <node pkg="polytope_ros" type="polytope_plotter.py" name="polytope_plotter" output="screen">
+        <param name="vertices_csv_path" value="$(arg vertices_csv_path)" />
+        <param name="output_png_path" value="$(arg output_png_path)" />
+        <param name="show_window" value="$(arg show_window)" />
+        <param name="plot_title" value="MOCA 3D Force Polytope" />
+    </node>
+
+</launch>

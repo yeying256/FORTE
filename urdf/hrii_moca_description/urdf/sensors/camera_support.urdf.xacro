@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:macro name="camera_support" params="name parent *origin length radius">
+    <joint name="${name}_joint" type="fixed">
+      <xacro:insert_block name="origin" />
+      <parent link="${parent}"/>
+      <child link="${name}_link"/>
+    </joint>
+
+    <link name="${name}_link">
+    <visual>
+      <geometry>
+	<cylinder length="${length}" radius="${radius}"/>
+      </geometry>
+      <material name="blue">
+	<color rgba="0 0 .7 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+	<cylinder length="${length}" radius="${radius}"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.5"/>
+      <inertia ixx="0.01" ixy="0.0" ixz="0.0" iyy="0.01" iyz="0.0" izz="0.01"/>
+    </inertial>
+    </link>
+  </xacro:macro>
+</robot>

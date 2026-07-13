@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>moca_operator_gui</name>
+  <version>0.0.0</version>
+  <description>Desktop operator GUI for launching MOCA control and planning workflows.</description>
+
+  <maintainer email="wangxiao@todo.todo">wangxiao</maintainer>
+  <license>TODO</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <depend>moca_trajectory_generator</depend>
+  <depend>moca_vlm</depend>
+  <depend>moca_realsense</depend>
+  <depend>moca_home_return</depend>
+  <depend>moca_teaching_tools</depend>
+  <depend>polytope_ros</depend>
+  <depend>geometry_msgs</depend>
+  <depend>hrii_robot_msgs</depend>
+  <depend>interactive_markers</depend>
+  <depend>libfranka</depend>
+  <depend>roscpp</depend>
+  <depend>rospy</depend>
+  <depend>sensor_msgs</depend>
+  <depend>std_msgs</depend>
+  <depend>std_srvs</depend>
+  <depend>visualization_msgs</depend>
+
+  <exec_depend>python3-pil</exec_depend>
+  <exec_depend>python3-numpy</exec_depend>
+  <exec_depend>python3-tk</exec_depend>
+
+  <export>
+  </export>
+</package>

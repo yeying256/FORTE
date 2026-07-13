@@ -1,0 +1,30 @@
+{
+  "saved_at": "2026-06-14T15:13:10.010899+00:00",
+  "source": "api",
+  "model": "gpt-5.5",
+  "image_path": "realsense:///moca_realsense/capture_image#1781449970196067967",
+  "result": {
+    "objects": [
+      {
+        "object_description": "One red Coca-Cola beverage can lying horizontally on the tray; standard slim cylindrical aluminum soda can, approximately 12 cm long and 6.5 cm in diameter, with the end cap visible and no other objects overlapping it.",
+        "material_guess": "Aluminum can with likely carbonated soft drink contents; glossy red printed metal exterior and standard beverage-can form suggest a filled soda can.",
+        "mass_kg": 0.38,
+        "mass_kg_range": [
+          0.34,
+          0.41
+        ],
+        "confidence": "medium",
+        "occluded": false
+      }
+    ],
+    "object_description": "One red Coca-Cola beverage can lying horizontally on the tray; standard slim cylindrical aluminum soda can, approximately 12 cm long and 6.5 cm in diameter, with the end cap visible and no other objects overlapping it.",
+    "material_guess": "Aluminum can with likely carbonated soft drink contents; glossy red printed metal exterior and standard beverage-can form suggest a filled soda can.",
+    "mass_kg": 0.38,
+    "mass_kg_range": [
+      0.34,
+      0.41
+    ],
+    "confidence": "medium",
+    "reasoning": "Excluding the plastic tray, the only distinct object visible is a standard Coca-Cola can, estimated as roughly 355 mL of soda plus about 15 g of aluminum for a total near 0.38 kg."
+  }
+}

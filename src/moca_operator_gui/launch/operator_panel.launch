@@ -1,0 +1,13 @@
+<launch>
+  <arg name="config_file" default="$(find moca_operator_gui)/config/operator_panel.yaml" />
+  <arg name="force_capability_settings_file" default="$(find moca_trajectory_generator)/config/force_capability_settings.yaml" />
+
+  <rosparam command="load" file="$(arg force_capability_settings_file)" subst_value="true" />
+
+  <node pkg="moca_operator_gui"
+        type="operator_panel_node.py"
+        name="moca_operator_gui"
+        output="screen">
+    <rosparam command="load" file="$(arg config_file)" subst_value="true" />
+  </node>
+</launch>

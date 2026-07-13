@@ -1,0 +1,32 @@
+save_force_capacity: true
+save_manipulability: true
+save_manipulability_ellipsoid: true
+save_residual_polytope: true
+
+post_plan_duration_sec: 5.0
+auto_stop_on_comparison_complete: true
+comparison_run_state_topic: "/comparison_run_state"
+wait_start_delta_threshold: 1.0e-5
+wait_change_delta_threshold: 1.0e-5
+wait_command_stable_sec: 0.75
+wait_min_record_duration_sec: 1.0
+wait_recent_target_timeout_sec: 1.0
+
+data_output_dir: "output/polytope_ros/data"
+fig_output_dir: "output/polytope_ros/fig"
+
+manipulability_topic: "/wb_cart_imp_controller/manipulability"
+manipulability_ellipsoid_topic: "/wb_cart_imp_controller/manipulability_ellipsoid"
+directional_force_capacity_topic: "/wb_cart_imp_controller/directional_force_capacity"
+desired_force_topic: "/wb_cart_imp_controller/desired_force"
+force_polytope_vertices_topic: "/wb_cart_imp_controller/force_polytope_vertices"
+pose_topic: "/wb_cart_imp_controller/moca_pose"
+pose_target_topic: "/wb_cart_imp_controller/moca_pose_target"
+state_topic: "/wb_cart_imp_controller/moca_state"
+state_target_topic: "/wb_cart_imp_controller/moca_state_target"
+target_pose_topic: "/target_pose"
+vlm_mass_result_topic: "/vlm_mass_result"
+
+animation_fps: 10.0
+animation_max_frames: 180
+fallback_polytope_radius_N: 80.0

@@ -1,0 +1,10 @@
+state_topic: /wb_cart_imp_controller/moca_state
+ee_pose_topic: /wb_cart_imp_controller/moca_pose
+odom_topic: /moca_white/robotnik_base_control/odom
+current_sample_topic: /moca_teaching/current_sample
+recorded_sample_topic: /moca_teaching/recorded_sample
+upward_force_capacity_topic: /moca_teaching/upward_force_capacity
+manipulability_topic: /moca_teaching/manipulability
+publish_rate_hz: 10.0
+arm_joint_count: 7
+allow_state_odom_fallback: true

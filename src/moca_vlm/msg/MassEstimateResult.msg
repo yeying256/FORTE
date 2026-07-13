@@ -1,0 +1,14 @@
+std_msgs/Header header
+string request_id
+bool success
+string source
+string model
+string image_path
+string result_json_path
+float64 mass_kg
+float64[] mass_kg_range
+string material_guess
+string object_description
+string confidence
+string reasoning
+string error_message

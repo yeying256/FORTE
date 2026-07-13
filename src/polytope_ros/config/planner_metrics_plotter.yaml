@@ -1,0 +1,5 @@
+# 规划器离线 cost 图像自动导出
+planner_metrics_output_png_path: "$(find polytope_ros)/../../output/polytope_ros/planned_whole_body_metrics.png"
+show_window: false
+render_rate_hz: 1.0
+watch_comparison_runs: true

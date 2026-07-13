@@ -1,0 +1,13 @@
+<launch>
+  <!-- Explicit legacy entrypoint: keeps the current TCP/IP-based stack intact. -->
+  <arg name="trajectory_config_file" default="$(find moca_trajectory_generator)/config/target_pose_generator_params.yaml" />
+  <arg name="vlm_config_file" default="$(find moca_vlm)/config/mass_estimator_params.yaml" />
+  <arg name="plotter_config_file" default="$(find polytope_ros)/config/real_execution_plotter.yaml" />
+  <arg name="planner_metrics_plotter_config_file" default="$(find polytope_ros)/config/planner_metrics_plotter.yaml" />
+  <arg name="launch_vlm_mass_estimator" default="false" />
+  <arg name="launch_planner_metrics_plotter" default="true" />
+  <arg name="launch_rviz" default="true" />
+  <arg name="rviz_config_file" default="$(find Moca_controller)/rviz/moca_tf_tree.rviz" />
+
+  <include file="$(find Moca_controller)/launch/moca_impedance_controller.launch" pass_all_args="true" />
+</launch>

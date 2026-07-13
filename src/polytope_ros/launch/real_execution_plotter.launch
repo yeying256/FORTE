@@ -1,0 +1,12 @@
+<launch>
+    <arg name="trajectory_config_file" default="$(find moca_trajectory_generator)/config/target_pose_generator_params.yaml" />
+    <arg name="plotter_config_file" default="$(find polytope_ros)/config/real_execution_plotter.yaml" />
+
+    <node pkg="polytope_ros"
+          type="real_execution_plotter.py"
+          name="real_execution_plotter"
+          output="screen">
+        <rosparam command="load" file="$(arg trajectory_config_file)" subst_value="true" />
+        <rosparam command="load" file="$(arg plotter_config_file)" subst_value="true" />
+    </node>
+</launch>

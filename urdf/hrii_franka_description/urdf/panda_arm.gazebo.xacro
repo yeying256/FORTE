@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='utf-8'?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="panda">
+    
+    <xacro:macro name="panda_arm_gazebo_ros_control" params="arm_id:='panda'
+                                                 namespace:=''">
+
+        <gazebo>
+            <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+                <legacyModeNS>true</legacyModeNS>
+                <robotNamespace>/$(arg namespace)</robotNamespace>      
+                <!-- <controlPeriod>0.001</controlPeriod> -->
+                <updateRate>1000.0</updateRate>
+            </plugin>
+        </gazebo>
+
+    </xacro:macro>
+
+    <xacro:macro name="panda_arm_gazebo_references" params="arm_id:='panda'">
+        <xacro:property name="link_mu1" value="0.2" />
+        <xacro:property name="link_mu2" value="0.2" />
+        <xacro:property name="self_collide" value="true" />
+
+        <gazebo reference="${arm_id}_base_link">
+            <selfCollide>${self_collide}</selfCollide>
+            <mu1>${link_mu1}</mu1>
+            <mu2>${link_mu2}</mu2>
+        </gazebo>
+        <gazebo reference="${arm_id}_link1">
+            <selfCollide>${self_collide}</selfCollide>
+            <mu1>${link_mu1}</mu1>
+            <mu2>${link_mu2}</mu2>
+        </gazebo>
+        <gazebo reference="${arm_id}_link2">
+            <selfCollide>${self_collide}</selfCollide>
+            <mu1>${link_mu1}</mu1>
+            <mu2>${link_mu2}</mu2>
+        </gazebo>
+        <gazebo reference="${arm_id}_link3">
+            <selfCollide>${self_collide}</selfCollide>
+            <mu1>${link_mu1}</mu1>
+            <mu2>${link_mu2}</mu2>
+        </gazebo>
+        <gazebo reference="${arm_id}_link4">
+            <selfCollide>${self_collide}</selfCollide>
+            <mu1>${link_mu1}</mu1>
+            <mu2>${link_mu2}</mu2>
+        </gazebo>
+        <gazebo reference="${arm_id}_link5">
+            <selfCollide>${self_collide}</selfCollide>
+            <mu1>${link_mu1}</mu1>
+            <mu2>${link_mu2}</mu2>
+        </gazebo>
+        <gazebo reference="${arm_id}_link6">
+            <selfCollide>${self_collide}</selfCollide>
+            <mu1>${link_mu1}</mu1>
+            <mu2>${link_mu2}</mu2>
+        </gazebo>
+        <gazebo reference="${arm_id}_link7">
+            <selfCollide>${self_collide}</selfCollide>
+            <mu1>${link_mu1}</mu1>
+            <mu2>${link_mu2}</mu2>
+        </gazebo>
+        <gazebo reference="${arm_id}_link8">
+            <selfCollide>${self_collide}</selfCollide>
+            <mu1>${link_mu1}</mu1>
+            <mu2>${link_mu2}</mu2>
+        </gazebo>
+
+    </xacro:macro>
+
+</robot>

@@ -1,0 +1,97 @@
+
+isaac:
+    Moca:
+        pwd: "/media/wangxiao/iit_work_disk/IIT_ws/Moca_polytope/Moca_Isaac/Moca_fix_wheels.usd"
+        prim_path: "/World/MOCA"
+
+        # 机器人初始世界位姿
+        # 支持三种格式：
+        # [x, y, z]
+        # [x, y, z, yaw]
+        # [x, y, z, qw, qx, qy, qz]
+        init_world_poses: [0.0, 0.0, -0.08,0.0]
+        init_joint_positions: [0.0, -0.785398, 0.0, -2.356194, 0.0, 1.570796, 0.785398, 0.04, 0.04]
+        dof: 10
+        zero_arm_joint_drive_and_friction: false
+        arm_joint_drive_stiffness_scale: 0.0
+        arm_joint_drive_damping_scale: 1.7
+        arm_joint_friction_scale: 0.01
+communication:
+    isaac:
+        ip: '127.0.0.1'
+        port: 5005
+        target_frequency: 1000
+
+
+    feedback:
+        name:
+            type: int
+            lenth: 1
+            unit: "None"
+            description: "用这个判断指令是什么"
+        mobile_positions:
+            type: list[float64]
+            length: 3
+            unit: "m&rad"
+            description: "机器人位置 [x, y, z]"
+        arm_positions:
+            type: list[float64]
+            length: 7
+            unit: "rad"       # ⚠️ 关键：明确单位是弧度
+            description: "关节角度 [J1, J2, ..., J6]"
+        mobile_velocity:
+            type: list[float64]
+            length: 3
+            unit: "m&rad"
+            description: "机器人位置 [x, y, z]"
+        arm_velocity:
+            type: list[float64]
+            length: 7
+            unit: "rad"       # ⚠️ 关键：明确单位是弧度
+            description: "关节角度 [J1, J2, ..., J6]"
+        figger:
+            type: float64
+            wdth: 1
+            unit: "m"
+            description: "抓取器"
+    command:
+        name:
+            type: int
+            lenth: 1
+            unit: "None"
+            description: "消息类型，控制指令固定为 CONTROL_CMD"
+        reserved:
+            type: int
+            lenth: 1
+            unit: "bit-field"
+            description: "接口编码：低8位=arm接口，高8位=mobile接口"
+        mobile_velocity:
+            type: list[float64]
+            length: 3
+            unit: "m/s&rad/s"
+            description: "机器人速度 [vx, vy, wz]"
+        mobile_wrench:
+            type: list[float64]
+            length: 3
+            unit: "N&N&N*m"
+            description: "机器人虚拟力矩/广义力 [Fx, Fy, Mz]"
+        arm_positions:
+            type: list[float64]
+            length: 7
+            unit: "rad"
+            description: "关节位置 [J1, J2, ..., J7]"
+        arm_velocity:
+            type: list[float64]
+            length: 7
+            unit: "rad/s"
+            description: "关节角速度 [J1, J2, ..., J7]"
+        arm_torques:
+            type: list[float64]
+            length: 7
+            unit: "N*m"
+            description: "关节力矩 [J1, J2, ..., J7]"
+        figger:
+            type: float64
+            wdth: 1
+            unit: "m"
+            description: "抓取器"

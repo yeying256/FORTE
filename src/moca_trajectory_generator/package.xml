@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>moca_trajectory_generator</name>
+  <version>0.0.0</version>
+  <description>Trajectory generator for the MOCA target pose topic.</description>
+
+  <maintainer email="wangxiao@todo.todo">wangxiao</maintainer>
+  <license>TODO</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>message_generation</build_depend>
+  <exec_depend>message_runtime</exec_depend>
+  <depend>geometry_msgs</depend>
+  <depend>hrii_robot_msgs</depend>
+  <depend>moca_vlm</depend>
+  <depend>polytope_ros</depend>
+  <depend>roscpp</depend>
+  <depend>roslib</depend>
+  <depend>rospy</depend>
+  <depend>sensor_msgs</depend>
+  <depend>std_msgs</depend>
+  <depend>tf</depend>
+  <depend>visualization_msgs</depend>
+
+  <export>
+  </export>
+</package>
