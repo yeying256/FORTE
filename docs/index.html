@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="FORTE: Task-Adaptive Force Capability Optimization for Mobile Manipulators">
+  <title>FORTE | Project Page</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="page">
+    <header class="hero">
+      <div class="eyebrow">Research Project</div>
+      <h1>FORTE</h1>
+      <h2>Task-Adaptive Force Capability Optimization for Mobile Manipulators</h2>
+      <p class="subtitle">
+        A task-oriented whole-body optimization framework that adapts robot force capability
+        to the physical requirements of manipulation tasks.
+      </p>
+
+      <div class="links">
+        <a class="button primary" href="https://github.com/yeying256/FORTE" target="_blank" rel="noopener noreferrer">
+          <span>⌘</span> Code
+        </a>
+        <a class="button" href="https://youtu.be/YkhhU_b4ybw" target="_blank" rel="noopener noreferrer">
+          <span>▶</span> YouTube
+        </a>
+        <a class="button" href="https://www.bilibili.com/video/BV11fe16FEdc/" target="_blank" rel="noopener noreferrer">
+          <span>▶</span> Bilibili
+        </a>
+      </div>
+    </header>
+
+    <section class="section">
+      <h3>Video</h3>
+      <div class="video-wrap">
+        <iframe
+          src="https://www.youtube.com/embed/YkhhU_b4ybw"
+          title="FORTE project video"
+          loading="lazy"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen>
+        </iframe>
+      </div>
+      <p class="caption">
+        Project overview and experiments. A Bilibili mirror is available from the button above.
+      </p>
+    </section>
+
+    <section class="section">
+      <h3>Overview</h3>
+      <p>
+        FORTE optimizes the whole-body configuration of a mobile manipulator while preserving
+        a desired end-effector trajectory. Instead of maximizing force capability everywhere,
+        the framework adapts the required capability to the task, leaving redundancy available
+        for other objectives such as manipulability, joint-limit avoidance, smoothness, and base motion.
+      </p>
+
+      <div class="pipeline">
+        <div class="card">
+          <div class="step">01</div>
+          <h4>Task Understanding</h4>
+          <p>Estimate task-related physical requirements from visual and task information.</p>
+        </div>
+        <div class="arrow">→</div>
+        <div class="card">
+          <div class="step">02</div>
+          <h4>Force Requirement</h4>
+          <p>Convert the task requirement into a desired force profile along the trajectory.</p>
+        </div>
+        <div class="arrow">→</div>
+        <div class="card">
+          <div class="step">03</div>
+          <h4>Whole-Body Optimization</h4>
+          <p>Optimize redundancy using residual force capability together with additional objectives.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section split">
+      <div>
+        <h3>Code</h3>
+        <p>
+          The implementation and supporting files are available in the public GitHub repository.
+        </p>
+        <a class="text-link" href="https://github.com/yeying256/FORTE" target="_blank" rel="noopener noreferrer">
+          github.com/yeying256/FORTE →
+        </a>
+      </div>
+      <div>
+        <h3>Paper</h3>
+        <p>
+          The paper link and citation can be added here once the final public version is available.
+        </p>
+        <span class="muted-link">Paper link coming soon</span>
+      </div>
+    </section>
+
+    <footer>
+      <p>FORTE · Mobile Manipulation Research</p>
+    </footer>
+  </main>
+</body>
+</html>
